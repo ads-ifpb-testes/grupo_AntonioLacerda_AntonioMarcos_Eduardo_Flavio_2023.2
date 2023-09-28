@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  postgis:
+    image: postgis/postgis:latest
+    container_name: postgis
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CrimeAlert
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./database/data/postgis:/var/lib/postgresql/data
+      - ./database/scripts/create.sql:/docker-entrypoint-initdb.d/init.sql

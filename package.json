@@ -1,0 +1,8 @@
+{
+  "name": "CrimeAlert",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Cabereca/CrimeAlert.git",
+  "author": "ndbzika <chakcpps@gmail.com>",
+  "license": "MIT"
+}
