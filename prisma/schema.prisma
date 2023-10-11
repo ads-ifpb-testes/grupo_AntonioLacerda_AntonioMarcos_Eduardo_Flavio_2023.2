@@ -22,7 +22,6 @@ model User {
   city      String?
   address   String?
   phone     String?
-  ocurrency String[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   Ocurrency Ocurrency[]
