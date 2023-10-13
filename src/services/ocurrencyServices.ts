@@ -1,10 +1,20 @@
 import { OcurrencyDTO } from '../dtos/OcurrencyDTO';
+import { NotFoundError } from '../helpers/api-errors';
 import { Ocurrency } from '../models/Ocurrency';
 
 const GetPublicOccurrecies = async () => {
   const ocurrency = await Ocurrency.findAll({
     where: {
       public: true
+    }
+  });
+  return ocurrency;
+};
+
+const GetUserOccurrecies = async (userId: string) => {
+  const ocurrency = await Ocurrency.findAll({
+    where: {
+      userId
     }
   });
   return ocurrency;
@@ -27,4 +37,13 @@ const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
   return newOcurrency;
 };
 
-export { GetPublicOccurrecies, CreateOcurrency };
+const DeleteOcurrency =async (id: string) => {
+  const ocurrency = await Ocurrency.findByPk(id);
+  if (!ocurrency) {
+    throw new NotFoundError('Ocurrency not found');
+  }
+  const deletedOcurrency = await ocurrency.destroy();
+  return
+}
+
+export { GetPublicOccurrecies, GetUserOccurrecies, CreateOcurrency, DeleteOcurrency };
