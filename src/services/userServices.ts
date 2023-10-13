@@ -53,33 +53,21 @@ const createUser = async (user: UserDTO) => {
 };
 
 const updateUser = async (email: string, userData: Partial<UserDTO>) => {
-  const user = await findUser(email);
+  const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new BadRequestError('User not found');
+    throw new BadRequestError('User already exists');
   }
-  const updatedUser = await user.dataValues.update(userData);
-
+  const updatedUser = await user.update(userData);
   if (!updatedUser) {
     throw new InternalServerError('Error updating user');
   }
-  return;
+  const { password, ...userWithoutPassword } = updatedUser.dataValues;
+
+  return userWithoutPassword;
 };
 
 const deleteUser = async (email: string) => {
-  const user = await findUser(email);
-  if (!user) {
-    throw new NotFoundError('User not found');
-  }
-  const deletedUser = await user.delete({
-    where: {
-      email
-    }
-  });
-
-  if (!deletedUser) {
-    throw new InternalServerError('Error deleting user');
-  }
-
+  const user = await User.destroy({ where: { email } });
   return;
 };
 
