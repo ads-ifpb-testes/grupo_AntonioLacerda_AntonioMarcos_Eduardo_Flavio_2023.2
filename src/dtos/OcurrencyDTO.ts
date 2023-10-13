@@ -1,10 +1,16 @@
-export type Ocurrency = {
+export type OcurrencyDTO = {
     id: string
-    idUser: string
+    userId: string
     title: string
     type: OcurrencyType
     date: Date
-    location: string
+    location: {
+        LNG: number
+        LTD: number
+    }
+    public: boolean
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 enum OcurrencyType {

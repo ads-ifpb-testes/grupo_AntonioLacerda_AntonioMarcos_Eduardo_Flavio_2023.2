@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { errorMiddleware } from './middlewares/error';
 import userRoutes from './routes/userRoutes';
+import ocurrencyRoutes from './routes/ocurrencyRoutes';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRoutes);
+app.use('/ocurrency', ocurrencyRoutes)
 
 app.use(errorMiddleware);
 

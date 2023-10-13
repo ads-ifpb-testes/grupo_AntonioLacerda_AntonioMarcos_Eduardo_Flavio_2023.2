@@ -28,13 +28,18 @@ model User {
 }
 
 model Ocurrency {
-  id       String                               @id @default(uuid())
-  idUser   String
-  user     User                                 @relation(fields: [idUser], references: [id])
-  title    String
-  type     OcurrencyType
-  date     DateTime
-  location Unsupported("geometry(Point, 4326)")
+  id        String                               @id @default(uuid())
+  userId    String
+  user      User                                 @relation(fields: [userId], references: [id])
+  title     String
+  type      OcurrencyType
+  date      DateTime
+  location  Unsupported("geometry(Point, 4326)")
+  public    Boolean
+  createdAt DateTime                             @default(now())
+  updatedAt DateTime                             @updatedAt
+
+  @@index([location], name: "location_idx", type: Gist)
 }
 
 enum OcurrencyType {
