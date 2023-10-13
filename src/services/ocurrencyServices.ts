@@ -37,13 +37,18 @@ const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
   return newOcurrency;
 };
 
-const DeleteOcurrency =async (id: string) => {
+const DeleteOcurrency = async (id: string) => {
   const ocurrency = await Ocurrency.findByPk(id);
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
   const deletedOcurrency = await ocurrency.destroy();
-  return
-}
+  return;
+};
 
-export { GetPublicOccurrecies, GetUserOccurrecies, CreateOcurrency, DeleteOcurrency };
+export {
+  GetPublicOccurrecies,
+  GetUserOccurrecies,
+  CreateOcurrency,
+  DeleteOcurrency
+};

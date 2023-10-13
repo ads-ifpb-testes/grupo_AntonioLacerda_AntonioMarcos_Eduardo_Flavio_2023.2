@@ -45,7 +45,7 @@ const Ocurrency = sequelize.define('ocurrency', {
   }
 });
 
-Ocurrency.belongsTo(User, {foreignKey: 'userId'});
+Ocurrency.belongsTo(User, { foreignKey: 'userId' });
 
 (async () => {
   await Ocurrency.sync();

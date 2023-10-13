@@ -5,10 +5,20 @@ import {
   InternalServerError,
   NotFoundError
 } from '../helpers/api-errors';
+import jwt from 'jsonwebtoken';
 import { hash } from 'bcrypt';
+
+type TokenType = { email: string };
 
 const hashPassword = async (password: string) => {
   return await hash(password, 10);
+};
+
+const generateToken = ({ email }: TokenType) => {
+  const token = jwt.sign({ email }, process.env.JWT_SECRET || '', {
+    expiresIn: '8h'
+  });
+  return token;
 };
 
 const findUser = async (email: string) => {
@@ -71,4 +81,4 @@ const deleteUser = async (email: string) => {
   return;
 };
 
-export { findUser, createUser, updateUser, deleteUser };
+export { findUser, createUser, updateUser, deleteUser, generateToken };
