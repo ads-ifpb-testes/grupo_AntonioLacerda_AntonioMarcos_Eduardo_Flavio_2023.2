@@ -1,4 +1,4 @@
-export type UserDTO = {
+export interface UserDTO {
   id: number;
   email: string;
   name: string;
@@ -8,7 +8,6 @@ export type UserDTO = {
   city?: string;
   adress?: string;
   phone?: string;
-  ocurrency?: string[];
   createdAt: Date;
   updatedAt: Date;
-};
+}
