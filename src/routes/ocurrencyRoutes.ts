@@ -1,11 +1,12 @@
-import { Router } from "express";
-import { OcurrencyController } from "../controllers/ocurrencyController";
+import { Router } from 'express';
+import { OcurrencyController } from '../controllers/ocurrencyController';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.get("/public", OcurrencyController.index);
-router.post("/", OcurrencyController.create);
-router.delete("/:id", OcurrencyController.destroy)
-router.get("/:userId", OcurrencyController.userOcurrencies)
+router.get('/public', authMiddleware, OcurrencyController.index);
+router.post('/', authMiddleware, OcurrencyController.create);
+router.delete('/:id', authMiddleware, OcurrencyController.destroy);
+router.get('/:userId', authMiddleware, OcurrencyController.userOcurrencies);
 
 export default router;
