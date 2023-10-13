@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/sequelize';
+import { User } from './User';
 
 const Ocurrency = sequelize.define('ocurrency', {
   id: {
@@ -10,7 +11,11 @@ const Ocurrency = sequelize.define('ocurrency', {
   },
   userId: {
     type: DataTypes.UUID,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
   },
   title: {
     type: DataTypes.STRING(100),
@@ -39,6 +44,8 @@ const Ocurrency = sequelize.define('ocurrency', {
     type: DataTypes.DATE
   }
 });
+
+Ocurrency.belongsTo(User, {foreignKey: 'userId'});
 
 (async () => {
   await Ocurrency.sync();
