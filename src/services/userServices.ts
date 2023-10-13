@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { User } from '../models/User';
 import { UserDTO } from '../dtos/UserDTO';
 import {
   BadRequestError,
@@ -7,14 +7,12 @@ import {
 } from '../helpers/api-errors';
 import { hash } from 'bcrypt';
 
-const prisma = new PrismaClient();
-
 const hashPassword = async (password: string) => {
   return await hash(password, 10);
 };
 
 const findUser = async (email: string) => {
-  const user = await prisma.user.findUnique({
+  const user = await User.findOne({
     where: {
       email
     }
@@ -22,12 +20,12 @@ const findUser = async (email: string) => {
   if (!user) {
     throw new BadRequestError('User Not Found');
   }
-  const { password, ...userWithoutPassword } = user;
+  const { password, ...userWithoutPassword } = user.dataValues;
   return userWithoutPassword;
 };
 
 const createUser = async (user: UserDTO) => {
-  const userExists = await prisma.user.findUnique({
+  const userExists = await User.findOne({
     where: {
       email: user.email
     }
@@ -35,24 +33,22 @@ const createUser = async (user: UserDTO) => {
   if (userExists) {
     throw new BadRequestError('User already exists');
   }
-  const createdUser = await prisma.user.create({
-    data: {
-      email: user.email,
-      name: user.name,
-      password: await hashPassword(user.password),
-      birthDate: user.birthDate,
-      country: user.country,
-      city: user.city,
-      address: user.adress,
-      phone: user.phone,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    }
+  const createdUser = await User.create({
+    email: user.email,
+    name: user.name,
+    password: await hashPassword(user.password),
+    birthDate: user.birthDate,
+    country: user.country,
+    city: user.city,
+    adress: user.adress,
+    phone: user.phone,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
   });
   if (!createdUser) {
     throw new InternalServerError('Error creating user');
   }
-  const { password, ...userWithoutPassword } = createdUser;
+  const { password, ...userWithoutPassword } = createdUser.dataValues;
   return userWithoutPassword;
 };
 
@@ -61,20 +57,7 @@ const updateUser = async (email: string, userData: Partial<UserDTO>) => {
   if (!user) {
     throw new BadRequestError('User not found');
   }
-  const updatedUser = await prisma.user.update({
-    where: {
-      email
-    },
-    data: {
-      name: userData.name || user.name,
-      birthDate: userData.birthDate || user.birthDate,
-      country: userData.country || user.country,
-      city: userData.city || user.city,
-      address: userData.adress || user.address,
-      phone: userData.phone || user.phone,
-      updatedAt: new Date()
-    }
-  });
+  const updatedUser = await user.dataValues.update(userData);
 
   if (!updatedUser) {
     throw new InternalServerError('Error updating user');
@@ -87,7 +70,7 @@ const deleteUser = async (email: string) => {
   if (!user) {
     throw new NotFoundError('User not found');
   }
-  const deletedUser = await prisma.user.delete({
+  const deletedUser = await user.delete({
     where: {
       email
     }
