@@ -18,11 +18,11 @@ const create = async (req: Request, res: Response) => {
   return res.status(201).send(createdUser);
 };
 
-const update = (req: Request, res: Response) => {
+const update = async (req: Request, res: Response) => {
   const { email } = req.params;
   const userData = req.body;
-  const updatedUser = updateUser(email, userData);
-  return res.status(204).send(updatedUser);
+  const updatedUser = await updateUser(email, userData);
+  return res.send(updatedUser);
 };
 
 const destroy = (req: Request, res: Response) => {
