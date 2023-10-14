@@ -96,4 +96,4 @@ const register = async (nome, email, password, telefone) => {
     });
 };
 
-export { login, logout, register, checkCookie };
+export { login, logout, register, checkCookie, readCookie, deleteCookie };
