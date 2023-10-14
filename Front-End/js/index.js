@@ -3,7 +3,7 @@ import { login, logout, register, checkCookie } from './login.js';
 
 window.onload = () => {
   if (checkCookie()) {
-    window.location.href = 'http://localhost:5500/html/home.html';
+    window.location.href = './html/home.html';
   }
 };
 

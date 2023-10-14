@@ -53,7 +53,7 @@ const login = async (email, password) => {
       console.log(data);
       if (data.token) {
         createCookie(data.token);
-        window.location.href = 'http://localhost:5500/html/home.html';
+        window.location.href = './html/home.html';
       } else {
         alert(data.message);
       }
@@ -62,7 +62,7 @@ const login = async (email, password) => {
 
 const logout = () => {
   deleteCookie();
-  window.location.href = 'http://localhost:5500/';
+  window.location.href = '../index.html';
 };
 
 const register = async (nome, email, password, telefone) => {
@@ -86,7 +86,7 @@ const register = async (nome, email, password, telefone) => {
       console.log(data);
       if (data.token) {
         createCookie(data.token);
-        window.location.href = 'http://localhost:5500/html/home.html';
+        window.location.href = './home.html';
       } else {
         alert('Erro ao cadastrar usuário');
       }
