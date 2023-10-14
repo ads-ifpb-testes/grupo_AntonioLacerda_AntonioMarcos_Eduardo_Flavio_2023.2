@@ -94,18 +94,24 @@ async function AddMarker(e) {
 
 map.on('click', (e) => AddMarker(e));
 
+const redIcon = new L.Icon({
+  iconUrl: '../assets/red_marker.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34]
+});
+
 window.onload = async () => {
   const occurrencies = await GetPublicOcurrencies();
   if (!occurrencies) {
     alert('Não há ocorrências públicas cadastradas!');
   }
-  console.log(occurrencies);
-  occurrencies.forEach((ocurrency) => {
+  occurrencies.map((ocurrency) => {
     const isPublic = ocurrency.public ? 'Pública' : 'Privada';
-    L.marker([
-      ocurrency?.location.coordinates[0],
-      ocurrency?.location.coordinates[1]
-    ])
+    L.marker(
+      [ocurrency?.location.coordinates[0], ocurrency?.location.coordinates[1]],
+      { icon: redIcon }
+    )
       .bindPopup(
         `<b>${ocurrency.title}</b><br>${formatDate(ocurrency.date)} - ${
           ocurrency.time
