@@ -4,6 +4,7 @@ export type OcurrencyDTO = {
   title: string;
   type: OcurrencyType;
   date: Date;
+  time: string;
   location: {
     LNG: number;
     LTD: number;

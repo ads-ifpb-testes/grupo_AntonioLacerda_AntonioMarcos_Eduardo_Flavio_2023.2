@@ -60,7 +60,7 @@ const createUser = async (user: UserDTO) => {
   }
   const { password, ...userWithoutPassword } = createdUser.dataValues;
   const token = generateToken({ email: user.email });
-  return { userWithoutPassword, token };
+  return { user: { ...userWithoutPassword }, token };
 };
 
 const updateUser = async (email: string, userData: Partial<UserDTO>) => {

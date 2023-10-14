@@ -29,6 +29,11 @@ const Ocurrency = sequelize.define('ocurrency', {
     type: DataTypes.DATE,
     allowNull: false
   },
+  time: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    defaultValue: '00:00'
+  },
   public: {
     type: DataTypes.BOOLEAN,
     allowNull: false

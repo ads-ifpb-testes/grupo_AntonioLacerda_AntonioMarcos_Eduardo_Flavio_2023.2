@@ -26,6 +26,7 @@ const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
     title: ocurrencyData.title,
     type: ocurrencyData.type,
     date: ocurrencyData.date,
+    time: ocurrencyData.time,
     location: {
       type: 'Point',
       coordinates: [ocurrencyData.location.LNG, ocurrencyData.location.LTD]
