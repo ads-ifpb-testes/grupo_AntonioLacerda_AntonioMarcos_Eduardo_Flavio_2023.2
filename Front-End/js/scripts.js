@@ -52,4 +52,36 @@ const GeoLocalizationToAdress = async (latlng) => {
   return address;
 };
 
-export { findUser, findUserId, parseJwt, GeoLocalizationToAdress };
+const GetPublicOcurrencies = async () => {
+  let ocurrencies = null;
+  const options = {
+    headers: {
+      Authorization: `Bearer ${readCookie()}`
+    }
+  };
+  await fetch('http://localhost:3000/ocurrency/public', options)
+    .then((response) => response.json())
+    .then((data) => {
+      ocurrencies = data;
+    })
+    .catch((err) => console.log(err));
+  return ocurrencies;
+};
+
+const formatDate = (date) => {
+  const dateSplit = date.split('-');
+  const splittedday = dateSplit[2].split('T');
+  const year = dateSplit[0];
+  const month = dateSplit[1];
+  const day = splittedday[0];
+  return `${day}/${month}/${year}`;
+};
+
+export {
+  findUser,
+  findUserId,
+  parseJwt,
+  GeoLocalizationToAdress,
+  GetPublicOcurrencies,
+  formatDate
+};

@@ -1,6 +1,12 @@
 /* eslint-disable no-undef */
 import { checkCookie, readCookie } from './login.js';
-import { findUser, findUserId, parseJwt } from './scripts.js';
+import {
+  GetPublicOcurrencies,
+  findUser,
+  findUserId,
+  formatDate,
+  parseJwt
+} from './scripts.js';
 import { GeoLocalizationToAdress } from './scripts.js';
 
 window.onload = () => {
@@ -72,24 +78,41 @@ var googleStreets = L.tileLayer(
   }
 );
 
-var marker;
-
+let marker;
 async function AddMarker(e) {
   if (marker) {
     map.removeLayer(marker);
   }
   marker = L.marker([e.latlng.lat, e.latlng.lng]);
-  marker.bindPopup(
-    '<b>Local da Ocorrência</b><br> <p>Local: Rua 1, Bairro 1</p>'
-  );
   marker.addTo(map);
   map.setView([e.latlng.lat, e.latlng.lng]);
-  location.LNG = e.latlng.lng;
-  location.LTD = e.latlng.lat;
+  location.LNG = e.latlng.lat;
+  location.LTD = e.latlng.lng;
   let adress = await GeoLocalizationToAdress(e.latlng);
   local.value = `${adress.road}, ${adress.neighbourhood} - ${adress.city_district} - ${adress.state}`;
 }
 
 map.on('click', (e) => AddMarker(e));
+
+window.onload = async () => {
+  const occurrencies = await GetPublicOcurrencies();
+  if (!occurrencies) {
+    alert('Não há ocorrências públicas cadastradas!');
+  }
+  console.log(occurrencies);
+  occurrencies.forEach((ocurrency) => {
+    const isPublic = ocurrency.public ? 'Pública' : 'Privada';
+    L.marker([
+      ocurrency?.location.coordinates[0],
+      ocurrency?.location.coordinates[1]
+    ])
+      .bindPopup(
+        `<b>${ocurrency.title}</b><br>${formatDate(ocurrency.date)} - ${
+          ocurrency.time
+        }<br>${isPublic}<br>${ocurrency.type}<br>`
+      )
+      .addTo(map);
+  });
+};
 
 googleStreets.addTo(map);
