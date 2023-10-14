@@ -27,10 +27,54 @@
         </li>
       </ul>
     </header>
-    <button id="adicionar__ocorrencia">
-      <img src="../assets/addIcon.svg" alt="Adicionar" />
-    </button>
+    <div id="container__criar__ocorrencia">
+      <h3>Cadastrar ocorrencia</h3>
+      <form>
+        <div>
+          <label for="titulo">Título</label>
+          <input type="text" name="titulo" id="titulo" />
+        </div>
+        <div>
+          <!-- adicionar data na api -->
+          <label for="data">Data</label>
+          <input type="date" name="data" id="data" />
+        </div>
+        <div>
+          <label for="hora">Hora</label>
+          <input type="time" name="hora" id="hora" />
+        </div>
+        <div>
+          <label for="local">Local</label>
+          <input
+            type="text"
+            name="local"
+            id="local"
+            placeholder="Clique no mapa para selecionar o local"
+          />
+          <span>Se precisar mudar o local, basta arrastar o ponteiro.</span>
+        </div>
+        <div>
+          <label for="tipo">Tipo</label>
+          <select name="tipo" id="tipo">
+            <option value="roubo">Roubo</option>
+            <option value="assalto">Assalto</option>
+            <option value="sequestro">Sequestro</option>
+            <option value="homicidio">Homicídio</option>
+            <option value="estupro">Estupro</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div>
+          <label for="status">Minha ocorrência é: </label>
+          <select name="status" id="status">
+            <option value="publica">Publica</option>
+            <option value="privada">Privada</option>
+          </select>
+        </div>
+        <button id="adicionar__ocorrencia">Adicionar</button>
+      </form>
+    </div>
     <div id="map"></div>
-    <script src="../js/home.js"></script>
+    <script src="../js/home.js" type="module"></script>
   </body>
 </html>

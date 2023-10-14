@@ -1,4 +1,24 @@
-var map = L.map('map').setView([51.505, -0.09], 13);
+import { checkCookie } from './login.js';
+
+window.onload = () => {
+  if (!checkCookie()) {
+    window.location.href = '../index.html';
+  }
+};
+
+const addocorrencia = document.getElementById('adicionar__ocorrencia');
+
+addocorrencia?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const hora = document.getElementById('hora').value;
+  const data = document.getElementById('data').value;
+  const tipo = document.getElementById('tipo').value;
+  console.log(tipo, data, hora);
+});
+
+// mapa
+
+var map = L.map('map').setView([-6.892101664756008, -38.55633394935698], 14);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
@@ -12,9 +32,5 @@ var googleStreets = L.tileLayer(
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
   }
 );
-L.marker([-6.892521333714177, -38.55081126741672])
-  .addTo(map)
-  .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-  .openPopup();
 
 googleStreets.addTo(map);
