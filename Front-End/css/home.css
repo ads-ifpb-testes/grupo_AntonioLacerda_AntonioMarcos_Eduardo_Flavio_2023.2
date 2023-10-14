@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  list-style-type: none;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+a,
+button {
+  cursor: pointer;
+  border: none;
+}
+
+#cabecalho {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  z-index: 999;
+  width: 34rem;
+  height: 5rem;
+  background-color: #fafaf0;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+#cabecalho ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.2rem;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 100%;
+}
+#cabecalho ul li {
+  text-align: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#cabecalho ul li:hover {
+  color: #bb40bf;
+  text-decoration: underline;
+}
+#cabecalho ul li div {
+  border-radius: 50%;
+}
+#cabecalho ul li div img {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#adicionar__ocorrencia {
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+  z-index: 999;
+  background-color: #bb40bf;
+  border-radius: 50%;
+  min-width: 60px;
+  min-height: 60px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+#adicionar__ocorrencia img {
+  width: 30px;
+  height: 30px;
+}
+
+#map {
+  width: 100%;
+  height: 100vh;
+}/*# sourceMappingURL=home.css.map */
