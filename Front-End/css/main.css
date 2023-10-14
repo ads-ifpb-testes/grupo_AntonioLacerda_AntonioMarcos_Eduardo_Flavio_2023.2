@@ -1,0 +1,87 @@
+@charset "UTF-8";
+/*Variáveis*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  background-image: url(../assets/background.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+body a,
+body button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: background ease-in-out 300ms;
+}
+
+.container-form {
+  font-size: 1.5rem;
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 30vw;
+  height: 100vh;
+  background-color: #FAFAF0;
+  border-radius: 15px 0 0 15px;
+}
+
+.form {
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 80%;
+  gap: 0.8rem;
+}
+.form h2 {
+  font-size: 3rem;
+  margin: 10% auto;
+  font-weight: bolder;
+}
+.form label {
+  padding-left: 10%;
+  align-self: flex-start;
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+}
+.form #email,
+.form #senha {
+  height: 45px;
+  width: 80%;
+  border-radius: 5px;
+  padding-left: 0.5rem;
+  font-size: 1.5rem;
+}
+.form button {
+  margin-top: 10%;
+  background-color: #003BFF;
+  color: #FAFAF0;
+  padding: 1rem 7rem;
+  border-radius: 5px;
+  font-size: 1.5rem;
+}
+
+.logo {
+  margin-right: 30vw;
+}/*# sourceMappingURL=main.css.map */
