@@ -1,19 +1,11 @@
 /* eslint-disable no-undef */
-import { checkCookie, readCookie } from './login.js';
 import {
   GetPublicOcurrencies,
-  findUser,
   findUserId,
   formatDate,
-  parseJwt
+  isTokenValid
 } from './scripts.js';
 import { GeoLocalizationToAdress } from './scripts.js';
-
-window.onload = () => {
-  if (!checkCookie()) {
-    window.location.href = '../index.html';
-  }
-};
 
 const title = document.getElementById('titulo');
 const data = document.getElementById('data');
@@ -102,20 +94,27 @@ const redIcon = new L.Icon({
 });
 
 window.onload = async () => {
+  if (!(await isTokenValid())) {
+    window.location.href = '../index.html';
+  }
+
   const occurrencies = await GetPublicOcurrencies();
+  if (occurrencies?.message) {
+    alert(occurrencies.message);
+  }
   if (!occurrencies) {
     alert('Não há ocorrências públicas cadastradas!');
   }
-  occurrencies.map((ocurrency) => {
+  occurrencies?.map((ocurrency) => {
     const isPublic = ocurrency.public ? 'Pública' : 'Privada';
     L.marker(
       [ocurrency?.location.coordinates[0], ocurrency?.location.coordinates[1]],
       { icon: redIcon }
     )
       .bindPopup(
-        `<b>${ocurrency.title}</b><br>${formatDate(ocurrency.date)} - ${
-          ocurrency.time
-        }<br>${isPublic}<br>${ocurrency.type}<br>`
+        `<b><h2>${ocurrency.title}</h2></b><br>${formatDate(
+          ocurrency.date
+        )} - ${ocurrency.time}<br>${isPublic}<br>${ocurrency.type}<br>`
       )
       .addTo(map);
   });

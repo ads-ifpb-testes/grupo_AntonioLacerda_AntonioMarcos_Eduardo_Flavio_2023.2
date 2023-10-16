@@ -1,4 +1,5 @@
-import { readCookie } from './login.js';
+/* eslint-disable no-undef */
+import { checkCookie, readCookie } from './login.js';
 
 const findUser = async (email, token) => {
   let user = null;
@@ -38,6 +39,23 @@ function parseJwt(token) {
 
   return JSON.parse(jsonPayload);
 }
+
+const isTokenValid = async () => {
+  console.log(checkCookie());
+  if (!checkCookie()) {
+    return false;
+  }
+  console.log(readCookie());
+  const { email } = parseJwt(readCookie());
+  if (!email) {
+    return false;
+  }
+  const user = await findUser(email, readCookie());
+  if (!user) {
+    return false;
+  }
+  return true;
+};
 
 const GeoLocalizationToAdress = async (latlng) => {
   let address = null;
@@ -81,6 +99,7 @@ export {
   findUser,
   findUserId,
   parseJwt,
+  isTokenValid,
   GeoLocalizationToAdress,
   GetPublicOcurrencies,
   formatDate

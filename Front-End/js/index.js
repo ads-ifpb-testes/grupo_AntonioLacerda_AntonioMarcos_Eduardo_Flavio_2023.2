@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
-import { login, logout, register, checkCookie } from './login.js';
+import { login, register } from './login.js';
+import { isTokenValid } from './scripts.js';
 
-window.onload = () => {
-  if (checkCookie()) {
+window.onload = async () => {
+  if (await isTokenValid()) {
     window.location.href = './html/home.html';
   }
 };

@@ -27,11 +27,10 @@ const deleteCookie = () => {
 
 const checkCookie = () => {
   let token = readCookie();
-  if (token !== null) {
-    return true;
-  } else {
+  if (!token) {
     return false;
   }
+  return true;
 };
 
 const login = async (email, password) => {
