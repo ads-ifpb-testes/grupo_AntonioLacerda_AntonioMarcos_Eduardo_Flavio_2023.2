@@ -6,6 +6,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
+  list-style: none;
 }
 
 html {
@@ -24,6 +25,8 @@ body {
 }
 body a,
 body button {
+  text-decoration: none;
+  color: black;
   border: none;
   outline: none;
   cursor: pointer;

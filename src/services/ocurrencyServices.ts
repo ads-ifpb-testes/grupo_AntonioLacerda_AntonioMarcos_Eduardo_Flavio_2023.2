@@ -43,7 +43,7 @@ const DeleteOcurrency = async (id: string) => {
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
-  const deletedOcurrency = await ocurrency.destroy();
+  await ocurrency.destroy();
   return;
 };
 

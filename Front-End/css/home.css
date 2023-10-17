@@ -16,6 +16,8 @@ a,
 button {
   cursor: pointer;
   border: none;
+  text-decoration: none;
+  color: black;
 }
 
 #cabecalho {

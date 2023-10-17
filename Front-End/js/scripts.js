@@ -86,6 +86,23 @@ const GetPublicOcurrencies = async () => {
   return ocurrencies;
 };
 
+const GetUserOcurrencies = async () => {
+  let ocurrencies = null;
+  const { id } = await findUserId();
+  const options = {
+    headers: {
+      Authorization: `Bearer ${readCookie()}`
+    }
+  };
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+    .then((response) => response.json())
+    .then((data) => {
+      ocurrencies = data;
+    })
+    .catch((err) => console.log(err));
+  return ocurrencies;
+};
+
 const formatDate = (date) => {
   const dateSplit = date.split('-');
   const splittedday = dateSplit[2].split('T');
@@ -102,5 +119,6 @@ export {
   isTokenValid,
   GeoLocalizationToAdress,
   GetPublicOcurrencies,
+  GetUserOcurrencies,
   formatDate
 };

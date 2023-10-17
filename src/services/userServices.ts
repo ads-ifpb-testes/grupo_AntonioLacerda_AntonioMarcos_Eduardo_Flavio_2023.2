@@ -78,7 +78,7 @@ const updateUser = async (email: string, userData: Partial<UserDTO>) => {
 };
 
 const deleteUser = async (email: string) => {
-  const user = await User.destroy({ where: { email } });
+  await User.destroy({ where: { email } });
   return;
 };
 
