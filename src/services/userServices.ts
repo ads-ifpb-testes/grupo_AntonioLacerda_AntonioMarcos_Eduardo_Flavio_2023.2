@@ -59,7 +59,8 @@ const createUser = async (user: UserDTO) => {
     throw new InternalServerError('Error creating user');
   }
   const { password, ...userWithoutPassword } = createdUser.dataValues;
-  return userWithoutPassword;
+  const token = generateToken({ email: user.email });
+  return { user: { ...userWithoutPassword }, token };
 };
 
 const updateUser = async (email: string, userData: Partial<UserDTO>) => {
@@ -77,7 +78,7 @@ const updateUser = async (email: string, userData: Partial<UserDTO>) => {
 };
 
 const deleteUser = async (email: string) => {
-  const user = await User.destroy({ where: { email } });
+  await User.destroy({ where: { email } });
   return;
 };
 

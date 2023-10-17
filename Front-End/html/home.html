@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link rel="stylesheet" href="../css/home.css" />
+    <title>Home - Crime Alert</title>
+  </head>
+  <body>
+    <header id="cabecalho">
+      <ul>
+        <li><a href="userOcurrencies.html">Minhas ocorrências</a></li>
+        <li>
+          <div><img src="../assets/user.jpg" alt="Foto de usuário" /></div>
+        </li>
+      </ul>
+    </header>
+    <div id="container__criar__ocorrencia">
+      <h3>Cadastrar ocorrencia</h3>
+      <form>
+        <div>
+          <label for="titulo">Título</label>
+          <input type="text" name="titulo" id="titulo" />
+        </div>
+        <div>
+          <!-- adicionar data na api -->
+          <label for="data">Data</label>
+          <input type="date" name="data" id="data" />
+        </div>
+        <div>
+          <label for="hora">Hora</label>
+          <input type="time" name="hora" id="hora" />
+        </div>
+        <div>
+          <label for="local">Local</label>
+          <input
+            disabled
+            type="text"
+            name="local"
+            id="local"
+            placeholder="Clique no mapa para selecionar o local"
+          />
+          <span>Se precisar mudar o local, basta arrastar o ponteiro.</span>
+        </div>
+        <div>
+          <label for="tipo">Tipo</label>
+          <select name="tipo" id="tipo">
+            <option value="Roubo">Roubo</option>
+            <option value="Assalto">Assalto</option>
+            <option value="Sequestro">Sequestro</option>
+            <option value="Homicidio">Homicídio</option>
+            <option value="Estupro">Estupro</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        <div>
+          <label for="status">Minha ocorrência é: </label>
+          <select name="status" id="status">
+            <option value="publica">Publica</option>
+            <option value="privada">Privada</option>
+          </select>
+        </div>
+        <button id="adicionar__ocorrencia">Adicionar</button>
+      </form>
+    </div>
+    <div id="map"></div>
+    <script src="../js/home.js" type="module"></script>
+  </body>
+</html>

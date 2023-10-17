@@ -26,6 +26,7 @@ const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
     title: ocurrencyData.title,
     type: ocurrencyData.type,
     date: ocurrencyData.date,
+    time: ocurrencyData.time,
     location: {
       type: 'Point',
       coordinates: [ocurrencyData.location.LNG, ocurrencyData.location.LTD]
@@ -42,7 +43,7 @@ const DeleteOcurrency = async (id: string) => {
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
-  const deletedOcurrency = await ocurrency.destroy();
+  await ocurrency.destroy();
   return;
 };
 
