@@ -1,7 +1,16 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const sequelize = new Sequelize(
-  'postgres://postgres:postgres@localhost:5432/CrimeAlert'
+  String(process.env.DB_NAME),
+  String(process.env.DB_USER),
+  String(process.env.DB_PASSWORD),
+  {
+    host: String(process.env.DB_HOST),
+    dialect: 'postgres'
+  }
 );
 
 (async function () {
