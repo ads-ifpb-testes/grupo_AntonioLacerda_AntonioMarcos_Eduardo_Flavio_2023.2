@@ -52,8 +52,4 @@ const User = sequelize.define('user', {
   }
 });
 
-(async () => {
-  await User.sync();
-})();
-
 export { User };
