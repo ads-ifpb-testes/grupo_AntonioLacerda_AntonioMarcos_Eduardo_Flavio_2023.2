@@ -16,11 +16,11 @@ const login = async (req, res) => {
         }
     });
     if (!user) {
-        throw new api_errors_1.NotFoundError('Cade o menino de papai');
+        throw new api_errors_1.NotFoundError('Usuário não encontrado');
     }
     const verifyPassword = await bcrypt_1.default.compare(password, user.getDataValue('password'));
     if (!verifyPassword) {
-        throw new api_errors_1.UnauthorizedError('Vai timbora carniça!!');
+        throw new api_errors_1.UnauthorizedError('Usuário ou senha incorretos');
     }
     const token = (0, userServices_1.generateToken)({ email });
     const { password: _, ...userWithoutPassword } = user.dataValues;
