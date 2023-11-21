@@ -20,8 +20,8 @@ const findUser = async (email, token) => {
 const findUserId = async () => {
   const token = readCookie();
   const { email } = parseJwt(token);
-  const { id } = await findUser(email, token);
-  return { id, email, token };
+  const { _id } = await findUser(email, token);
+  return { _id, email, token };
 };
 
 function parseJwt(token) {
@@ -88,13 +88,13 @@ const GetPublicOcurrencies = async () => {
 
 const GetUserOcurrencies = async () => {
   let ocurrencies = null;
-  const { id } = await findUserId();
+  const { _id } = await findUserId();
   const options = {
     headers: {
       Authorization: `Bearer ${readCookie()}`
     }
   };
-  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+  await fetch(`http://localhost:3000/ocurrency/${_id}`, options)
     .then((response) => response.json())
     .then((data) => {
       ocurrencies = data;

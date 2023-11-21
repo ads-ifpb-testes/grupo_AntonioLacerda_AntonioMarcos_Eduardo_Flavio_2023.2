@@ -17,16 +17,16 @@ const status = document.getElementById('status');
 const addOcorrencia = document.getElementById('adicionar__ocorrencia');
 
 let location = {
-  LNG: null,
-  LTD: null
+  type: 'Point',
+  coordinates: []
 };
 
 addOcorrencia?.addEventListener('click', async (e) => {
   e.preventDefault();
   const isPublic = status.value === 'publica';
-  const { id, token } = await findUserId();
+  const { _id, token } = await findUserId();
   const ocurrencyData = {
-    userId: id,
+    userId: _id,
     title: title.value,
     date: data.value,
     time: hora.value,
@@ -98,8 +98,8 @@ async function AddMarker(e) {
   marker = L.marker([e.latlng.lat, e.latlng.lng]);
   marker.addTo(map);
   map.setView([e.latlng.lat, e.latlng.lng]);
-  location.LNG = e.latlng.lat;
-  location.LTD = e.latlng.lng;
+  location.coordinates[0] = e.latlng.lat;
+  location.coordinates[1] = e.latlng.lng;
   let adress = await GeoLocalizationToAdress(e.latlng);
   local.value = `${adress.road}, ${adress.neighbourhood} - ${adress.city_district} - ${adress.state}`;
 }
