@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+import { logout } from './login.js';
 import {
   GetPublicOcurrencies,
   findUserId,
@@ -51,6 +52,25 @@ addOcorrencia?.addEventListener('click', async (e) => {
         window.location.href = './home.html';
       }
     });
+});
+
+// Pop Up
+
+const logoutButton = document.querySelector('.button-logoff');
+const popup = document.querySelector('.popup');
+const confirmButton = document.getElementById('confirmButton');
+const cancelButton = document.getElementById('cancelButton');
+
+logoutButton.addEventListener('click', () => {
+  popup.style.display = 'flex';
+});
+
+confirmButton.addEventListener('click', () => {
+  logout();
+});
+
+cancelButton.addEventListener('click', () => {
+  popup.style.display = 'none';
 });
 
 // mapa

@@ -6,14 +6,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch 'src/' --exec 'ts-node ./src/server.ts' -e ts",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.2",
@@ -38,5 +39,8 @@
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "*"
+  },
+  "engines": {
+    "node": ">=18.18.0 <19.0.0"
   }
 }

@@ -10,11 +10,11 @@ const login = async (req: Request, res: Response) => {
     email: email
   });
   if (!user) {
-    throw new NotFoundError('Cade o menino de papai');
+    throw new NotFoundError('Usuário não encontrado');
   }
   const verifyPassword = await bcrypt.compare(password, user.password);
   if (!verifyPassword) {
-    throw new UnauthorizedError('Vai timbora carniça!!');
+    throw new UnauthorizedError('Usuário ou senha incorretos');
   }
   const token = generateToken({ email });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

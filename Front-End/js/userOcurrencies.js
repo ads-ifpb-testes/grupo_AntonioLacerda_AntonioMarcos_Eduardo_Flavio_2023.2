@@ -2,6 +2,7 @@
 
 const listOcurrencies = document.querySelector('.lista-ocorrencias');
 
+import { logout } from './login.js';
 import {
   GeoLocalizationToAdress,
   GetUserOcurrencies,
@@ -23,6 +24,25 @@ var googleStreets = L.tileLayer(
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
   }
 );
+
+// Pop Up
+
+const logoutButton = document.querySelector('.button-logoff');
+const popup = document.querySelector('.popup');
+const confirmButton = document.getElementById('confirmButton');
+const cancelButton = document.getElementById('cancelButton');
+
+logoutButton.addEventListener('click', () => {
+  popup.style.display = 'flex';
+});
+
+confirmButton.addEventListener('click', () => {
+  logout();
+});
+
+cancelButton.addEventListener('click', () => {
+  popup.style.display = 'none';
+});
 
 const addOcurrencyToList = async (ocurrency) => {
   const newOcurrency = document.createElement('li');
