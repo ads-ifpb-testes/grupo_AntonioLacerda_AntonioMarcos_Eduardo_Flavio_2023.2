@@ -4,3 +4,4 @@ mongo-data/
 *.scss
 *.css.map
 teste.http
+.tool-versions

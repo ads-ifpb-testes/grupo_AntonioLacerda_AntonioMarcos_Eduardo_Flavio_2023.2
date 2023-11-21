@@ -22,19 +22,24 @@
       <ul>
         <li><a href="userOcurrencies.html">Minhas ocorrências</a></li>
         <li>
-          <div><img src="../assets/user.jpg" alt="Foto de usuário" /></div>
+          <div class="button-logoff"><img src="../assets/user.jpg" alt="Foto de usuário" /></div>
         </li>
       </ul>
+      <div class="popup">
+        <div class="popup-content">
+            <button id="confirmButton">Sair</button>
+            <button id="cancelButton">Cancelar</button>
+        </div>
+    </div>
     </header>
     <div id="container__criar__ocorrencia">
-      <h3>Cadastrar ocorrencia</h3>
+      <h3>Cadastrar ocorrência</h3>
       <form>
         <div>
           <label for="titulo">Título</label>
           <input type="text" name="titulo" id="titulo" />
         </div>
         <div>
-          <!-- adicionar data na api -->
           <label for="data">Data</label>
           <input type="date" name="data" id="data" />
         </div>
