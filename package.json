@@ -39,8 +39,5 @@
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "*"
-  },
-  "engines": {
-    "node": ">=18.18.0 <19.0.0"
   }
 }
