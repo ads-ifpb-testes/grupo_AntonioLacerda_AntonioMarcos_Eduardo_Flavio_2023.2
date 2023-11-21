@@ -74,8 +74,15 @@ cancelButton.addEventListener('click', () => {
 });
 
 // mapa
+let actualPos = [-6.892101664756008, -38.55633394935698];
 
-var map = L.map('map').setView([-6.892101664756008, -38.55633394935698], 14);
+var map = L.map('map').setView(actualPos, 14);
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition((position) => {
+    actualPos = [position.coords.latitude, position.coords.longitude];
+    map.setView(actualPos, 14);
+  });
+}
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:

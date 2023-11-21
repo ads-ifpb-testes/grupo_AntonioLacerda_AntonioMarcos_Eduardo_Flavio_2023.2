@@ -41,11 +41,9 @@ function parseJwt(token) {
 }
 
 const isTokenValid = async () => {
-  console.log(checkCookie());
   if (!checkCookie()) {
     return false;
   }
-  console.log(readCookie());
   const { email } = parseJwt(readCookie());
   if (!email) {
     return false;
