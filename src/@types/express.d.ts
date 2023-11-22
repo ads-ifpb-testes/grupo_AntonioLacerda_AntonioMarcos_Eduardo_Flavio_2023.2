@@ -1,9 +1,9 @@
-import { UserDTO } from '../dtos/UserDTO';
+import { IUser } from '../dtos/UserDTO';
 
 declare global {
   namespace Express {
     export interface Request {
-      user?: Partial<UserDTO>;
+      user?: Partial<IUser>;
     }
   }
 }
