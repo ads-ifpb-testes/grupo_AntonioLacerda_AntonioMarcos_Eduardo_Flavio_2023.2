@@ -1,26 +1,34 @@
-import { OcurrencyDTO } from '../dtos/OcurrencyDTO';
-import { NotFoundError } from '../helpers/api-errors';
+import { IOcurrency } from '../dtos/OcurrencyDTO';
+import { BadRequestError, NotFoundError } from '../helpers/api-errors';
 import { Ocurrency } from '../models/Ocurrency';
+import { User } from '../models/User';
 
 const GetPublicOccurrecies = async () => {
-  const ocurrency = await Ocurrency.findAll({
-    where: {
-      public: true
-    }
+  const ocurrency = await Ocurrency.find({
+    public: true
   });
-  return ocurrency;
+  return ocurrency.map((ocurrency) => {
+    return ocurrency.toObject();
+  });
 };
 
 const GetUserOccurrecies = async (userId: string) => {
-  const ocurrency = await Ocurrency.findAll({
-    where: {
-      userId
-    }
+  if (!userId) {
+    throw new BadRequestError('User id is required');
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+  const ocurrency = await Ocurrency.find({
+    userId: userId
   });
-  return ocurrency;
+  return ocurrency.map((ocurrency) => {
+    return ocurrency.toObject();
+  });
 };
 
-const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
+const CreateOcurrency = async (ocurrencyData: IOcurrency) => {
   const newOcurrency = await Ocurrency.create({
     userId: ocurrencyData.userId,
     title: ocurrencyData.title,
@@ -29,21 +37,47 @@ const CreateOcurrency = async (ocurrencyData: OcurrencyDTO) => {
     time: ocurrencyData.time,
     location: {
       type: 'Point',
-      coordinates: [ocurrencyData.location.LNG, ocurrencyData.location.LTD]
+      coordinates: [
+        ocurrencyData.location.coordinates[0],
+        ocurrencyData.location.coordinates[1]
+      ]
     },
-    public: ocurrencyData.public,
-    createdAt: ocurrencyData.createdAt,
-    updatedAt: ocurrencyData.updatedAt
+    public: ocurrencyData.public
   });
-  return newOcurrency;
+  return newOcurrency.toObject();
 };
 
-const DeleteOcurrency = async (id: string) => {
-  const ocurrency = await Ocurrency.findByPk(id);
+const UpdateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
+  if (!id) {
+    throw new BadRequestError('Ocurrency id is required');
+  }
+  const ocurrency = await Ocurrency.findById(id);
+  console.log(ocurrency);
+  
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
-  await ocurrency.destroy();
+  const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, {new: true});
+  console.log(updatedOcurrency);
+
+  if (!updatedOcurrency) {
+    throw new BadRequestError('Ocurrency not updated');
+  }
+  return updatedOcurrency.toObject();
+};
+
+const DeleteOcurrency = async (id: string) => {
+  if (!id) {
+    throw new BadRequestError('Ocurrency id is required');
+  }
+  const ocurrency = await Ocurrency.findById(id);
+  if (!ocurrency) {
+    throw new NotFoundError('Ocurrency not found');
+  }
+  const deletedOcurrency = await ocurrency.deleteOne();
+  if (!deletedOcurrency) {
+    throw new BadRequestError('Ocurrency not deleted');
+  }
   return;
 };
 
@@ -51,5 +85,6 @@ export {
   GetPublicOccurrecies,
   GetUserOccurrecies,
   CreateOcurrency,
-  DeleteOcurrency
+  DeleteOcurrency,
+  UpdateOcurrency
 };

@@ -20,8 +20,8 @@ const findUser = async (email, token) => {
 const findUserId = async () => {
   const token = readCookie();
   const { email } = parseJwt(token);
-  const { id } = await findUser(email, token);
-  return { id, email, token };
+  const { _id } = await findUser(email, token);
+  return { _id, email, token };
 };
 
 function parseJwt(token) {
@@ -41,11 +41,9 @@ function parseJwt(token) {
 }
 
 const isTokenValid = async () => {
-  console.log(checkCookie());
   if (!checkCookie()) {
     return false;
   }
-  console.log(readCookie());
   const { email } = parseJwt(readCookie());
   if (!email) {
     return false;
@@ -88,13 +86,13 @@ const GetPublicOcurrencies = async () => {
 
 const GetUserOcurrencies = async () => {
   let ocurrencies = null;
-  const { id } = await findUserId();
+  const { _id } = await findUserId();
   const options = {
     headers: {
       Authorization: `Bearer ${readCookie()}`
     }
   };
-  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+  await fetch(`http://localhost:3000/ocurrency/${_id}`, options)
     .then((response) => response.json())
     .then((data) => {
       ocurrencies = data;
@@ -102,6 +100,34 @@ const GetUserOcurrencies = async () => {
     .catch((err) => console.log(err));
   return ocurrencies;
 };
+
+const deleteOcurrency = async (id) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${readCookie()}`
+    }
+  };
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+}
+
+const updateOcurrency = async (id, ocurrencyData) => {
+  console.log();
+  const options = {
+    method: "PUT",
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${readCookie()}`
+    },
+    body: JSON.stringify(ocurrencyData)
+  };
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+    .then((response) => response.json())
+    .then(() => {
+      alert("Atualizado com Sucesso")
+    })
+    .catch((err) => console.log(err));
+}
 
 const formatDate = (date) => {
   const dateSplit = date.split('-');
@@ -120,5 +146,7 @@ export {
   GeoLocalizationToAdress,
   GetPublicOcurrencies,
   GetUserOcurrencies,
-  formatDate
+  formatDate,
+  deleteOcurrency,
+  updateOcurrency
 };

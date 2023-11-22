@@ -1,24 +1,30 @@
-export type OcurrencyDTO = {
-  id: string;
-  userId: string;
+import { Schema } from 'mongoose';
+
+export interface IOcurrency {
+  _id: string;
+  userId: Schema.Types.ObjectId;
   title: string;
   type: OcurrencyType;
   date: Date;
   time: string;
   location: {
-    LNG: number;
-    LTD: number;
+    type: string;
+    coordinates: [number, number];
   };
   public: boolean;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
-enum OcurrencyType {
+export enum OcurrencyType {
   theft,
   robbery,
   sexualHarassment,
   kidnapping,
   vandalism,
   other
+}
+
+export interface IOcurrencyMethods {
+  getLatLng(): [number, number];
 }

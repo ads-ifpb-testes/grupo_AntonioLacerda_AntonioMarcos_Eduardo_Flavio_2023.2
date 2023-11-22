@@ -1,5 +1,7 @@
 node_modules/
+mongo-data/
 .env
 *.scss
 *.css.map
+*.http
 .tool-versions

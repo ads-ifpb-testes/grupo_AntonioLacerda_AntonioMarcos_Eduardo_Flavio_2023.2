@@ -17,16 +17,16 @@ const status = document.getElementById('status');
 const addOcorrencia = document.getElementById('adicionar__ocorrencia');
 
 let location = {
-  LNG: null,
-  LTD: null
+  type: 'Point',
+  coordinates: []
 };
 
 addOcorrencia?.addEventListener('click', async (e) => {
   e.preventDefault();
   const isPublic = status.value === 'publica';
-  const { id, token } = await findUserId();
+  const { _id, token } = await findUserId();
   const ocurrencyData = {
-    userId: id,
+    userId: _id,
     title: title.value,
     date: data.value,
     time: hora.value,
@@ -74,8 +74,15 @@ cancelButton.addEventListener('click', () => {
 });
 
 // mapa
+let actualPos = [-6.892101664756008, -38.55633394935698];
 
-var map = L.map('map').setView([-6.892101664756008, -38.55633394935698], 14);
+var map = L.map('map').setView(actualPos, 14);
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition((position) => {
+    actualPos = [position.coords.latitude, position.coords.longitude];
+    map.setView(actualPos, 14);
+  });
+}
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
@@ -98,8 +105,8 @@ async function AddMarker(e) {
   marker = L.marker([e.latlng.lat, e.latlng.lng]);
   marker.addTo(map);
   map.setView([e.latlng.lat, e.latlng.lng]);
-  location.LNG = e.latlng.lat;
-  location.LTD = e.latlng.lng;
+  location.coordinates[1] = e.latlng.lat;
+  location.coordinates[0] = e.latlng.lng;
   let adress = await GeoLocalizationToAdress(e.latlng);
   local.value = `${adress.road}, ${adress.neighbourhood} - ${adress.city_district} - ${adress.state}`;
 }
@@ -128,7 +135,7 @@ window.onload = async () => {
   occurrencies?.map((ocurrency) => {
     const isPublic = ocurrency.public ? 'Pública' : 'Privada';
     L.marker(
-      [ocurrency?.location.coordinates[0], ocurrency?.location.coordinates[1]],
+      [ocurrency?.location.coordinates[1], ocurrency?.location.coordinates[0]],
       { icon: redIcon }
     )
       .bindPopup(
