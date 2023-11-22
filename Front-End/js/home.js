@@ -105,8 +105,8 @@ async function AddMarker(e) {
   marker = L.marker([e.latlng.lat, e.latlng.lng]);
   marker.addTo(map);
   map.setView([e.latlng.lat, e.latlng.lng]);
-  location.coordinates[0] = e.latlng.lat;
-  location.coordinates[1] = e.latlng.lng;
+  location.coordinates[1] = e.latlng.lat;
+  location.coordinates[0] = e.latlng.lng;
   let adress = await GeoLocalizationToAdress(e.latlng);
   local.value = `${adress.road}, ${adress.neighbourhood} - ${adress.city_district} - ${adress.state}`;
 }
@@ -135,7 +135,7 @@ window.onload = async () => {
   occurrencies?.map((ocurrency) => {
     const isPublic = ocurrency.public ? 'Pública' : 'Privada';
     L.marker(
-      [ocurrency?.location.coordinates[0], ocurrency?.location.coordinates[1]],
+      [ocurrency?.location.coordinates[1], ocurrency?.location.coordinates[0]],
       { icon: redIcon }
     )
       .bindPopup(

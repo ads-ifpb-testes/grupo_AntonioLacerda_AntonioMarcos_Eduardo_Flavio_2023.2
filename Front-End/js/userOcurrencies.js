@@ -69,8 +69,8 @@ window.onload = async () => {
   const allOcurrencies = await GetUserOcurrencies();
   allOcurrencies?.map(async (ocurrency) => {
     L.marker([
-      ocurrency?.location.coordinates[0],
-      ocurrency?.location.coordinates[1]
+      ocurrency?.location.coordinates[1],
+      ocurrency?.location.coordinates[0]
     ]).addTo(map);
     await addOcurrencyToList(ocurrency);
   });
