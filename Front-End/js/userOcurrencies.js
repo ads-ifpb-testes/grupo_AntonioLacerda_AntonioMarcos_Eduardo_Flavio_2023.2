@@ -99,7 +99,7 @@ const addOcurrencyToList = async (ocurrency) => {
         type: tipo.value,
         date: data.value,
         time: hora.value,
-        public: status.value
+        public: status.value === "publica"
       });
     window.location.reload();
   })
