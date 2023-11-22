@@ -101,6 +101,16 @@ const GetUserOcurrencies = async () => {
   return ocurrencies;
 };
 
+const deleteOcurrency = async (id) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${readCookie()}`
+    }
+  };
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+}
+
 const formatDate = (date) => {
   const dateSplit = date.split('-');
   const splittedday = dateSplit[2].split('T');
@@ -118,5 +128,6 @@ export {
   GeoLocalizationToAdress,
   GetPublicOcurrencies,
   GetUserOcurrencies,
-  formatDate
+  formatDate,
+  deleteOcurrency
 };

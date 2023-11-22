@@ -39,10 +39,12 @@
     </header>
     <h1>Minhas Ocorrências</h1>
     <div class="container-geral">
-      <div id="map"></div>
-      <div class="container-ocorrencias">
-        <ul class="lista-ocorrencias"></ul>
-      </div>
+        <div id="map"></div>
+        <div class="container-ocorrencias">
+            <ul class="lista-ocorrencias">
+
+            </ul>
+        </div>
     </div>
     <section id="graphics">
       <h2>Gráficos</h2>
@@ -97,5 +99,35 @@
         ></iframe>
       </div>
     </section>
-  </body>
+  </body>    <div class="modal">
+        <div id="popup-update" class="popup-container">
+            <h1>Atualizar Ocorrência</h1>
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo">
+            <label for="tipo">Tipo:</label>
+            <select name="tipo" id="tipo">
+                <option value="Roubo">Roubo</option>
+                <option value="Assalto">Assalto</option>
+                <option value="Sequestro">Sequestro</option>
+                <option value="Homicidio">Homicídio</option>
+                <option value="Estupro">Estupro</option>
+                <option value="Outro">Outro</option>
+            </select>
+            <label for="data">Data:</label>
+            <input type="date" id="data" value="2023-01-01">
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora" value="12:00">
+            <label for="status">Minha ocorrência é: </label>
+            <select name="status" id="status">
+                <option value="publica">Pública</option>
+                <option value="privada">Privada</option>
+            </select>
+            <div class="container-modal-buttons">
+                <button id="button-save">Salvar Alterações</button>
+                <button id="button-close">Fechar</button>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>

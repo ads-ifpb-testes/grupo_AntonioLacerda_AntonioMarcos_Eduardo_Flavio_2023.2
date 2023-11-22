@@ -7,7 +7,8 @@ import {
   GeoLocalizationToAdress,
   GetUserOcurrencies,
   formatDate,
-  isTokenValid
+  isTokenValid,
+  deleteOcurrency
 } from './scripts.js';
 
 var map = L.map('map').setView([-6.892101664756008, -38.55633394935698], 14);
@@ -44,13 +45,61 @@ cancelButton.addEventListener('click', () => {
   popup.style.display = 'none';
 });
 
+const popup_update = document.querySelector('.modal');
+const closeButton = document.getElementById('button-close');
+
+
+closeButton.addEventListener('click', () => {
+  popup_update.style.display = 'none'
+})
+
 const addOcurrencyToList = async (ocurrency) => {
   const newOcurrency = document.createElement('li');
   newOcurrency.classList.add('ocorrencia');
+  const delButton = document.createElement('button');
+  delButton.classList.add('button-delete');
+  const img_del = document.createElement('img');
+  img_del.src = "../assets/lixeira.jpg"
+  img_del.style.width = '30px'
+  img_del.style.height = '30px'
+  delButton.appendChild(img_del);
+  delButton.addEventListener('click', () => {
+    deleteOcurrency(ocurrency._id);
+    window.location.reload();
+  });
+  const updateButton = document.createElement('button');
+  updateButton.classList.add('button-update');
+  const img_edit = document.createElement('img');
+  img_edit.src = "../assets/lápis.jpg"
+  img_edit.style.width = '30px'
+  img_edit.style.height = '30px'
+  updateButton.appendChild(img_edit);
+  updateButton.addEventListener('click', () => {
+    const titulo = document.getElementById('titulo');
+    titulo.value = `${ocurrency.title}`;
+    const tipo = document.getElementById('tipo');
+    tipo.value = `${ocurrency.type}`;
+    const data = document.getElementById('data');
+    data.value = ocurrency.date.split('T')[0];
+    const hora = document.getElementById('hora');
+    hora.value = `${ocurrency.time}`
+    const status = document.getElementById('status');
+    if (ocurrency.public) {
+      status.value = "publica"
+    } else {
+      status.value = "privada"
+    }
+    popup_update.style.display = 'flex'
+  })
   let adress = await GeoLocalizationToAdress({
     lat: ocurrency.location.coordinates[0],
     lng: ocurrency.location.coordinates[1]
   });
+  const container_buttons = document.createElement('div')
+  container_buttons.classList.add('container_buttons');
+  container_buttons.appendChild(updateButton);
+  container_buttons.appendChild(delButton);
+  const container_texto = document.createElement('div')
   const texto = `<strong>Titulo</strong>: ${ocurrency.title}<br>
   <strong>Tipo</strong>: ${ocurrency.type}<br>
   <strong>Rua</strong>: ${adress.road}<br>
@@ -58,7 +107,9 @@ const addOcurrencyToList = async (ocurrency) => {
   <strong>Cidade</strong>: ${adress.city_district} - ${adress.state}<br>
   <strong>Data</strong>: ${formatDate(ocurrency.date)}<br>
   <strong>Hora</strong>: ${ocurrency.time}`;
-  newOcurrency.innerHTML = texto;
+  container_texto.innerHTML = texto;
+  newOcurrency.appendChild(container_texto);
+  newOcurrency.appendChild(container_buttons);
   listOcurrencies.appendChild(newOcurrency);
 };
 
