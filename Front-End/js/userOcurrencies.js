@@ -54,6 +54,7 @@ closeButton.addEventListener('click', () => {
 })
 
 const addOcurrencyToList = async (ocurrency) => {
+  console.log("teste");
   const newOcurrency = document.createElement('li');
   newOcurrency.classList.add('ocorrencia');
   const delButton = document.createElement('button');
@@ -63,8 +64,8 @@ const addOcurrencyToList = async (ocurrency) => {
   img_del.style.width = '30px'
   img_del.style.height = '30px'
   delButton.appendChild(img_del);
-  delButton.addEventListener('click', () => {
-    deleteOcurrency(ocurrency._id);
+  delButton.addEventListener('click', async () => {
+    await deleteOcurrency(ocurrency._id);
     window.location.reload();
   });
   const updateButton = document.createElement('button');
@@ -92,8 +93,8 @@ const addOcurrencyToList = async (ocurrency) => {
     popup_update.style.display = 'flex'
   })
   let adress = await GeoLocalizationToAdress({
-    lat: ocurrency.location.coordinates[0],
-    lng: ocurrency.location.coordinates[1]
+    lat: ocurrency.location.coordinates[1],
+    lng: ocurrency.location.coordinates[0]
   });
   const container_buttons = document.createElement('div')
   container_buttons.classList.add('container_buttons');
