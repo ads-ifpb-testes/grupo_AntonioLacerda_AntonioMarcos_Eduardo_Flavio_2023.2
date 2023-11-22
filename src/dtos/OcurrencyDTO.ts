@@ -16,7 +16,7 @@ export interface IOcurrency {
   updatedAt: Date;
 }
 
-enum OcurrencyType {
+export enum OcurrencyType {
   theft,
   robbery,
   sexualHarassment,

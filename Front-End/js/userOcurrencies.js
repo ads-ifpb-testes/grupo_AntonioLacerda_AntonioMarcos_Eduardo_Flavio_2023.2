@@ -8,7 +8,8 @@ import {
   GetUserOcurrencies,
   formatDate,
   isTokenValid,
-  deleteOcurrency
+  deleteOcurrency,
+  updateOcurrency
 } from './scripts.js';
 
 var map = L.map('map').setView([-6.892101664756008, -38.55633394935698], 14);
@@ -91,27 +92,38 @@ const addOcurrencyToList = async (ocurrency) => {
       status.value = "privada"
     }
     popup_update.style.display = 'flex'
+    const salvar = document.getElementById('button-save')
+    salvar.addEventListener('click', async () => {
+      await updateOcurrency(ocurrency._id, {
+        title: titulo.value,
+        type: tipo.value,
+        date: data.value,
+        time: hora.value,
+        public: status.value
+      });
+    window.location.reload();
   })
+})
   let adress = await GeoLocalizationToAdress({
     lat: ocurrency.location.coordinates[1],
     lng: ocurrency.location.coordinates[0]
   });
-  const container_buttons = document.createElement('div')
-  container_buttons.classList.add('container_buttons');
-  container_buttons.appendChild(updateButton);
-  container_buttons.appendChild(delButton);
-  const container_texto = document.createElement('div')
-  const texto = `<strong>Titulo</strong>: ${ocurrency.title}<br>
+const container_buttons = document.createElement('div')
+container_buttons.classList.add('container_buttons');
+container_buttons.appendChild(updateButton);
+container_buttons.appendChild(delButton);
+const container_texto = document.createElement('div')
+const texto = `<strong>Titulo</strong>: ${ocurrency.title}<br>
   <strong>Tipo</strong>: ${ocurrency.type}<br>
   <strong>Rua</strong>: ${adress.road}<br>
   <strong>Bairro</strong>: ${adress.neighbourhood}<br>
   <strong>Cidade</strong>: ${adress.city_district} - ${adress.state}<br>
   <strong>Data</strong>: ${formatDate(ocurrency.date)}<br>
   <strong>Hora</strong>: ${ocurrency.time}`;
-  container_texto.innerHTML = texto;
-  newOcurrency.appendChild(container_texto);
-  newOcurrency.appendChild(container_buttons);
-  listOcurrencies.appendChild(newOcurrency);
+container_texto.innerHTML = texto;
+newOcurrency.appendChild(container_texto);
+newOcurrency.appendChild(container_buttons);
+listOcurrencies.appendChild(newOcurrency);
 };
 
 window.onload = async () => {

@@ -52,10 +52,14 @@ const UpdateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
     throw new BadRequestError('Ocurrency id is required');
   }
   const ocurrency = await Ocurrency.findById(id);
+  console.log(ocurrency);
+  
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
-  const updatedOcurrency = await ocurrency.updateOne(newData);
+  const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, {new: true});
+  console.log(updatedOcurrency);
+
   if (!updatedOcurrency) {
     throw new BadRequestError('Ocurrency not updated');
   }

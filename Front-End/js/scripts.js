@@ -111,6 +111,22 @@ const deleteOcurrency = async (id) => {
   await fetch(`http://localhost:3000/ocurrency/${id}`, options)
 }
 
+const updateOcurrency = async (id, ocurrencyData) => {
+  const options = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${readCookie()}`
+    },
+    body: JSON.stringify(ocurrencyData)
+  };
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
+    .then((response) => response.json())
+    .then(() => {
+      alert("Atualizado com Sucesso")
+    })
+    .catch((err) => console.log(err));
+}
+
 const formatDate = (date) => {
   const dateSplit = date.split('-');
   const splittedday = dateSplit[2].split('T');
@@ -129,5 +145,6 @@ export {
   GetPublicOcurrencies,
   GetUserOcurrencies,
   formatDate,
-  deleteOcurrency
+  deleteOcurrency,
+  updateOcurrency
 };
