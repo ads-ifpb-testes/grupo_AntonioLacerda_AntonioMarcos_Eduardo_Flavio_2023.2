@@ -1,12 +1,19 @@
+import client from '../database/redis';
 import { IOcurrency } from '../dtos/OcurrencyDTO';
 import { BadRequestError, NotFoundError } from '../helpers/api-errors';
 import { Ocurrency } from '../models/Ocurrency';
 import { User } from '../models/User';
 
-const GetPublicOccurrecies = async () => {
+const getPublicOccurrecies = async () => {
+  const key = `public`;
+  const cachedOcurrency = await client.get(key);
+  if (cachedOcurrency) {
+    return JSON.parse(cachedOcurrency);
+  }
   const ocurrency = await Ocurrency.find({
     public: true
   });
+  await client.set(key, JSON.stringify(ocurrency));
   return ocurrency.map((ocurrency) => {
     return ocurrency.toObject();
   });
@@ -16,6 +23,11 @@ const getUserOccurrecies = async (userId: string) => {
   if (!userId) {
     throw new BadRequestError('User id is required');
   }
+  const key = `user:${userId}`;
+  const cachedOcurrency = await client.get(key);
+  if (cachedOcurrency) {
+    return JSON.parse(cachedOcurrency);
+  }
   const user = await User.findById(userId);
   if (!user) {
     throw new NotFoundError('User not found');
@@ -23,6 +35,7 @@ const getUserOccurrecies = async (userId: string) => {
   const ocurrency = await Ocurrency.find({
     userId: userId
   });
+  await client.set(key, JSON.stringify(ocurrency));
   return ocurrency.map((ocurrency) => {
     return ocurrency.toObject();
   });
