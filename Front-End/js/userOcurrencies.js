@@ -55,7 +55,6 @@ closeButton.addEventListener('click', () => {
 })
 
 const addOcurrencyToList = async (ocurrency) => {
-  console.log("teste");
   const newOcurrency = document.createElement('li');
   newOcurrency.classList.add('ocorrencia');
   const delButton = document.createElement('button');

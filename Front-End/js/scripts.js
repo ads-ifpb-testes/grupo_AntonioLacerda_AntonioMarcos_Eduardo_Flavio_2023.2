@@ -112,7 +112,6 @@ const deleteOcurrency = async (id) => {
 }
 
 const updateOcurrency = async (id, ocurrencyData) => {
-  console.log();
   const options = {
     method: "PUT",
     headers: {
