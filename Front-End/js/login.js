@@ -89,13 +89,29 @@ const register = async (nome, email, password, telefone) => {
     .then((data) => {
       if (data.token) {
         createCookie(data.token);
-        window.location.href = './home.html';
+        iziToast.success({
+          title: 'Sucesso',
+          message: 'Usuário cadastrado com sucesso!',
+          position: 'bottomRight'
+        });
+        setTimeout(() => {
+          window.location.href = './home.html';
+        }, 2500);
       } else {
-        alert('Erro ao cadastrar usuário');
+        iziToast.error({
+          title: 'Erro',
+          message: 'Não foi possível cadastrar o usuário!',
+          position: 'bottomRight'
+        });
       }
     })
     .catch((error) => {
       console.log(error);
+      iziToast.error({
+        title: 'Erro',
+        message: 'Não foi possível cadastrar o usuário!',
+        position: 'bottomRight'
+      });
     });
 };
 
