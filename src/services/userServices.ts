@@ -1,5 +1,5 @@
 import { User } from '../models/User';
-import { IUser } from '../dtos/UserDTO';
+import { ICreateUser, IUser } from '../dtos/UserDTO';
 import { BadRequestError, InternalServerError } from '../helpers/api-errors';
 import jwt from 'jsonwebtoken';
 import { hash } from 'bcrypt';
@@ -30,7 +30,7 @@ const findUser = async (email: string) => {
   return userWithoutPassword;
 };
 
-const createUser = async (user: IUser) => {
+const createUser = async (user: ICreateUser) => {
   const userExists = await User.findOne({
     email: user.email
   });
@@ -67,10 +67,6 @@ const updateUser = async (email: string, userData: Partial<IUser>) => {
   if (!updatedUser) {
     throw new InternalServerError('Error updating user');
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password, ...userWithoutPassword } = updatedUser.toObject();
-
-  return userWithoutPassword;
 };
 
 const deleteUser = async (email: string) => {

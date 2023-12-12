@@ -21,8 +21,8 @@ const create = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   const { email } = req.params;
   const userData = req.body;
-  const updatedUser = await updateUser(email, userData);
-  return res.send(updatedUser);
+  await updateUser(email, userData);
+  return res.status(204).send();
 };
 
 const destroy = async (req: Request, res: Response) => {
