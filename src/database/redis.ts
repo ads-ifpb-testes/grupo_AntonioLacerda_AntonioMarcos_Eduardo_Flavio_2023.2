@@ -20,4 +20,5 @@ const client = createClient({
 
   await client.connect();
 })();
+
 export default client;

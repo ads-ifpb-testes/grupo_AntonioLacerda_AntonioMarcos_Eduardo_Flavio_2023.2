@@ -49,7 +49,6 @@ const login = async (email, password) => {
   await fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       if (data.token) {
         iziToast.success({
           title: 'Login realizado com sucesso'
@@ -88,7 +87,6 @@ const register = async (nome, email, password, telefone) => {
   await fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       if (data.token) {
         createCookie(data.token);
         window.location.href = './home.html';
