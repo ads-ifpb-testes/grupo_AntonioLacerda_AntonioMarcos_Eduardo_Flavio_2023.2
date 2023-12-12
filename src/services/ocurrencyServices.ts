@@ -1,4 +1,4 @@
-import { IOcurrency } from '../dtos/OcurrencyDTO';
+import { ICreateOcurrency, IOcurrency } from '../dtos/OcurrencyDTO';
 import { BadRequestError, NotFoundError } from '../helpers/api-errors';
 import { Ocurrency } from '../models/Ocurrency';
 import { User } from '../models/User';
@@ -28,7 +28,7 @@ const GetUserOccurrecies = async (userId: string) => {
   });
 };
 
-const CreateOcurrency = async (ocurrencyData: IOcurrency) => {
+const CreateOcurrency = async (ocurrencyData: ICreateOcurrency) => {
   const newOcurrency = await Ocurrency.create({
     userId: ocurrencyData.userId,
     title: ocurrencyData.title,
@@ -53,11 +53,13 @@ const UpdateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
   }
   const ocurrency = await Ocurrency.findById(id);
   console.log(ocurrency);
-  
+
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
-  const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, {new: true});
+  const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, {
+    new: true
+  });
   console.log(updatedOcurrency);
 
   if (!updatedOcurrency) {
