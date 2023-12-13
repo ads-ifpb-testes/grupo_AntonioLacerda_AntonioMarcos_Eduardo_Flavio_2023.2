@@ -99,6 +99,7 @@ const addOcurrencyToList = async (ocurrency) => {
     popup_update.style.display = 'flex';
     const salvar = document.getElementById('button-save');
     salvar.addEventListener('click', async () => {
+      popup_update.style.display = 'none';
       await updateOcurrency(ocurrency._id, {
         title: titulo.value,
         type: tipo.value,
@@ -106,7 +107,9 @@ const addOcurrencyToList = async (ocurrency) => {
         time: hora.value,
         public: status.value === 'publica'
       });
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500);
     });
   });
   let adress = await GeoLocalizationToAdress({
