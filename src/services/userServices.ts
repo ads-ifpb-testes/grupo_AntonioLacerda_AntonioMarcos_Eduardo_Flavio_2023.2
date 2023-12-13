@@ -64,7 +64,8 @@ const updateUser = async (email: string, userData: Partial<IUser>) => {
   if (!user) {
     throw new BadRequestError('User not exists');
   }
-  const updatedUser = await user.updateOne(userData);
+  const updatedUser = await User.findByIdAndUpdate(user._id, userData, {new: true});
+
   if (!updatedUser) {
     throw new InternalServerError('Error updating user');
   }

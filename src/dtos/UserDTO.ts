@@ -22,3 +22,16 @@ export interface ICreateUser {
   adress?: string;
   phone?: string;
 }
+
+export interface IUserWithoutPassword {
+  _id: number;
+  email: string;
+  name: string;
+  birthDate?: Date;
+  country?: string;
+  city?: string;
+  adress?: string;
+  phone?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

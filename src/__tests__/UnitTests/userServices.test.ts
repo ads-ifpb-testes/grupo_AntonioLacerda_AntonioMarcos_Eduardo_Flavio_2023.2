@@ -52,11 +52,11 @@ describe('User Services', () => {
         email: 'teste@email.com',
         password: '123456'
       };
-      const { user: createdUser } = await createUser(user);
+      await createUser(user);
       const updatedUser: Partial<ICreateUser> = {
         name: 'teste2'
       };
-      expect(await updateUser(user.email, updatedUser)).toBeUndefined();
+      expect(await updateUser(user.email, updatedUser)).toHaveProperty("_id");
     });
     it('should not update a user that not exists', async () => {
       const user: ICreateUser = {

@@ -47,7 +47,7 @@ const getUserOccurrecies = async (userId: string) => {
   });
 };
 
-const createOcurrency = async (ocurrencyData: IOcurrency) => {
+const createOcurrency = async (ocurrencyData: ICreateOcurrency) => {
   const newOcurrency = await Ocurrency.create({
     userId: ocurrencyData.userId,
     title: ocurrencyData.title,
@@ -73,7 +73,7 @@ const createOcurrency = async (ocurrencyData: IOcurrency) => {
   return newOcurrency.toObject();
 };
 
-const updateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
+const updateOcurrency = async (id: string, newData: Partial<ICreateOcurrency>) => {
   if (!id) {
     throw new BadRequestError('Ocurrency id is required');
   }
@@ -84,7 +84,6 @@ const updateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
   const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, {
     new: true
   });
-  console.log(updatedOcurrency);
 
   if (!updatedOcurrency) {
     throw new BadRequestError('Ocurrency not updated');

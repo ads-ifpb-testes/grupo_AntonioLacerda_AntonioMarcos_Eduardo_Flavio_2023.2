@@ -1,111 +1,114 @@
 import { describe, expect, it, beforeEach, beforeAll } from '@jest/globals';
 import { ICreateOcurrency, IOcurrency } from '../../dtos/OcurrencyDTO';
-import { IUser } from '../../dtos/UserDTO';
+import { IUser, IUserWithoutPassword } from '../../dtos/UserDTO';
 import {
-  GetPublicOccurrecies,
-  GetUserOccurrecies,
-  CreateOcurrency,
-  DeleteOcurrency,
-  UpdateOcurrency
+  getPublicOccurrecies,
+  getUserOccurrecies,
+  createOcurrency,
+  deleteOcurrency,
+  updateOcurrency
 } from '../../services/ocurrencyServices';
 import { User } from '../../models/User';
 import { Schema } from 'mongoose';
+import { createUser } from '../../services/userServices';
 
 const user = {
   name: 'teste',
   email: 'teste@email.com',
   password: '123456'
 };
-let newUser: IUser;
+let newUser: IUserWithoutPassword;
 beforeAll(async () => {
   await User.deleteMany({
     email: /test/
   });
-  newUser = await User.create(user);
+  newUser = (await createUser(user)).user;
+  console.log(newUser);
+
 });
 
 describe('Ocurrency Services', () => {
-  describe('GetPublicOccurrecies', () => {
+  describe('getPublicOccurrecies', () => {
     it('should get all public ocurrency', async () => {
-      const ocurrency = await GetPublicOccurrecies();
+      const ocurrency = await getPublicOccurrecies();
       expect(ocurrency).toBeInstanceOf(Array);
     });
     it('should get all public ocurrency with userId', async () => {
-      const ocurrencies = await GetPublicOccurrecies();
+      const ocurrencies = await getPublicOccurrecies();
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.userId).toBeDefined();
       });
     });
     it('should get all public ocurrency with title', async () => {
-      const ocurrencies = await GetPublicOccurrecies();
+      const ocurrencies = await getPublicOccurrecies();
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.title).toBeDefined();
       });
     });
     it('should get all public ocurrency with public flag true', async () => {
-      const ocurrencies = await GetPublicOccurrecies();
+      const ocurrencies = await getPublicOccurrecies();
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.public).toBe(true);
       });
     });
     it('should get all public ocurrency with timestamps', async () => {
-      const ocurrencies = await GetPublicOccurrecies();
+      const ocurrencies = await getPublicOccurrecies();
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.createdAt).toBeDefined();
         expect(ocurrency.updatedAt).toBeDefined();
       });
     });
     it('should get all public ocurrency with location', async () => {
-      const ocurrencies = await GetPublicOccurrecies();
+      const ocurrencies = await getPublicOccurrecies();
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.location).toBeDefined();
       });
     });
   });
-  describe('GetUserOccurrecies', () => {
+  describe('getUserOccurrecies', () => {
     it('should get all user ocurrency', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       expect(ocurrencies).toBeInstanceOf(Array);
     });
     it('should get all user ocurrency with userId', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.userId).toBeDefined();
       });
     });
     it('should get all user ocurrency with title', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.title).toBeDefined();
       });
     });
     it('should get all user ocurrency with public flag true or false', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.public).toBeDefined();
       });
     });
     it('should get all user ocurrency with timestamps', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.createdAt).toBeDefined();
         expect(ocurrency.updatedAt).toBeDefined();
       });
     });
     it('should get all user ocurrency with location', async () => {
-      const ocurrencies = await GetUserOccurrecies(String(newUser._id));
+      const ocurrencies = await getUserOccurrecies(String(newUser._id));
       ocurrencies.forEach((ocurrency: IOcurrency) => {
         expect(ocurrency.location).toBeDefined();
       });
     });
     it('should throw an error if userId is not provided', async () => {
-      await expect(GetUserOccurrecies('')).rejects.toThrowError();
+      await expect(getUserOccurrecies('')).rejects.toThrowError();
     });
     it('should throw an error if user is not found', async () => {
-      await expect(GetUserOccurrecies('123')).rejects.toThrowError();
+      await expect(getUserOccurrecies('123')).rejects.toThrowError();
     });
     it('should throw an error if user id is not provided', async () => {
-      await expect(GetUserOccurrecies('')).rejects.toThrowError();
+      await expect(getUserOccurrecies('')).rejects.toThrowError();
     });
   });
   describe('CreateOcurrency', () => {
@@ -113,46 +116,46 @@ describe('Ocurrency Services', () => {
       const ocurrency: ICreateOcurrency = {
         userId: String(newUser._id),
         title: 'test',
-        type: 'test',
+        type: 'Outro',
         date: new Date(),
-        time: 'test',
+        time: '00:00',
         location: {
           type: 'Point',
           coordinates: [0, 0]
         },
         public: true
       };
-      expect(await CreateOcurrency(ocurrency)).toHaveProperty('_id');
+      expect(await createOcurrency(ocurrency)).toHaveProperty('_id');
     });
     it('should throw an error if userId is not provided', async () => {
       const ocurrency: ICreateOcurrency = {
         userId: '',
         title: 'test',
-        type: 'test',
+        type: 'Outro',
         date: new Date(),
-        time: 'test',
+        time: '00:00',
         location: {
           type: 'Point',
           coordinates: [0, 0]
         },
         public: true
       };
-      await expect(CreateOcurrency(ocurrency)).rejects.toThrowError();
+      await expect(createOcurrency(ocurrency)).rejects.toThrowError();
     });
     it('should throw an error if userId is not found', async () => {
       const ocurrency: ICreateOcurrency = {
         userId: '123',
         title: 'test',
-        type: 'test',
+        type: 'Outro',
         date: new Date(),
-        time: 'test',
+        time: '00:00',
         location: {
           type: 'Point',
           coordinates: [0, 0]
         },
         public: true
       };
-      await expect(CreateOcurrency(ocurrency)).rejects.toThrowError();
+      await expect(createOcurrency(ocurrency)).rejects.toThrowError();
     });
   });
   describe('UpdateOcurrency', () => {
@@ -160,27 +163,27 @@ describe('Ocurrency Services', () => {
       const ocurrency: ICreateOcurrency = {
         userId: String(newUser._id),
         title: 'test',
-        type: 'test',
+        type: 'Outro',
         date: new Date(),
-        time: 'test',
+        time: '00:00',
         location: {
           type: 'Point',
           coordinates: [0, 0]
         },
         public: true
       };
-      const createdOcurrency = await CreateOcurrency(ocurrency);
-      const updatedOcurrency = await UpdateOcurrency(createdOcurrency._id, {
+      const createdOcurrency = await createOcurrency(ocurrency);
+      const updatedOcurrency = await updateOcurrency(createdOcurrency._id, {
         title: 'test2'
       });
       expect(updatedOcurrency).toHaveProperty('_id');
       expect(updatedOcurrency.title).toBe('test2');
     });
     it('should throw an error if ocurrency id is not provided', async () => {
-      await expect(UpdateOcurrency('', {})).rejects.toThrowError();
+      await expect(updateOcurrency('', {})).rejects.toThrowError();
     });
     it('should throw an error if ocurrency is not found', async () => {
-      await expect(UpdateOcurrency('123', {})).rejects.toThrowError();
+      await expect(updateOcurrency('123', {})).rejects.toThrowError();
     });
   });
   describe('DeleteOcurrency', () => {
@@ -197,14 +200,14 @@ describe('Ocurrency Services', () => {
         },
         public: true
       };
-      const createdOcurrency = await CreateOcurrency(ocurrency);
-      expect(await DeleteOcurrency(createdOcurrency._id)).toBeUndefined();
+      const createdOcurrency = await createOcurrency(ocurrency);
+      expect(await deleteOcurrency(createdOcurrency._id)).toBeUndefined();
     });
     it('should throw an error if ocurrency id is not provided', async () => {
-      await expect(DeleteOcurrency('')).rejects.toThrowError();
+      await expect(deleteOcurrency('')).rejects.toThrowError();
     });
     it('should throw an error if ocurrency is not found', async () => {
-      await expect(DeleteOcurrency('123')).rejects.toThrowError();
+      await expect(deleteOcurrency('123')).rejects.toThrowError();
     });
   });
 });
