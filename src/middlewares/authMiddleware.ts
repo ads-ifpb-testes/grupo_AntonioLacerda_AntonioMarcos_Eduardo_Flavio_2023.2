@@ -21,11 +21,8 @@ export const authMiddleware = async (
   let user;
   const cache = await client.get(email);
   if (cache) {
-    console.log('mid cache');
-
     user = JSON.parse(cache);
   } else {
-    console.log('mid db');
     user = await User.findOne({
       email
     });

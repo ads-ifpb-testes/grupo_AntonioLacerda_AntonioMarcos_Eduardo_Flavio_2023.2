@@ -11,11 +11,8 @@ const login = async (req: Request, res: Response) => {
   let user;
   let cache = await client.get(email);
   if (cache) {
-    console.log('cont cache');
-
     user = JSON.parse(cache);
   } else {
-    console.log(' cont db');
     user = await User.findOne({
       email
     });

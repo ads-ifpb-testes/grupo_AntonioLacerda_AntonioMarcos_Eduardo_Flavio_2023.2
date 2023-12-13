@@ -57,6 +57,19 @@ const createOcurrency = async (ocurrencyData: IOcurrency) => {
     },
     public: ocurrencyData.public
   });
+  if (!newOcurrency) {
+    throw new BadRequestError('Ocurrency not created');
+  }
+  const cachedPrivateOcurrency = await client.get(`user:${ocurrencyData.userId}`);
+  if (newOcurrency.public) {
+    const cachedPublicOcurrency = await client.get(`public`);
+    const parsedCachedPublicOcurrency = JSON.parse(cachedPublicOcurrency as string);
+    parsedCachedPublicOcurrency.push(newOcurrency.toObject());
+    await client.set(`public`, JSON.stringify(parsedCachedPublicOcurrency));
+  }
+  const cachedPrivateOcurrencyParsed = JSON.parse(cachedPrivateOcurrency as string);
+  cachedPrivateOcurrencyParsed.push(newOcurrency.toObject());
+  await client.set(`user:${ocurrencyData.userId}`, JSON.stringify(cachedPrivateOcurrencyParsed));
   return newOcurrency.toObject();
 };
 
@@ -69,10 +82,23 @@ const updateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
     throw new NotFoundError('Ocurrency not found');
   }
   const updatedOcurrency = await Ocurrency.findByIdAndUpdate(id, newData, { new: true });
-
   if (!updatedOcurrency) {
     throw new BadRequestError('Ocurrency not updated');
   }
+  const cachedPrivateOcurrency = await client.get(`user:${ocurrency.userId}`);
+  if (ocurrency.public) {
+    const cachedPublicOcurrency = await client.get(`public`);
+    const parsedCachedPublicOcurrency = JSON.parse(cachedPublicOcurrency as string);
+    const index = parsedCachedPublicOcurrency.findIndex((o: any) => o._id === id);
+    parsedCachedPublicOcurrency.splice(index, 1);
+    parsedCachedPublicOcurrency.push(updatedOcurrency.toObject());
+    await client.set(`public`, JSON.stringify(parsedCachedPublicOcurrency));
+  }
+  const cachedPrivateOcurrencyParsed = JSON.parse(cachedPrivateOcurrency as string);
+  const index = cachedPrivateOcurrencyParsed.findIndex((o: any) => o._id === id);
+  cachedPrivateOcurrencyParsed.splice(index, 1);
+  cachedPrivateOcurrencyParsed.push(updatedOcurrency.toObject());
+  await client.set(`user:${ocurrency.userId}`, JSON.stringify(cachedPrivateOcurrencyParsed));
   return updatedOcurrency.toObject();
 };
 
@@ -88,6 +114,18 @@ const deleteOcurrency = async (id: string) => {
   if (!deletedOcurrency) {
     throw new BadRequestError('Ocurrency not deleted');
   }
+  const cachedPrivateOcurrency = await client.get(`user:${ocurrency.userId}`);
+  if (ocurrency.public) {
+    const cachedPublicOcurrency = await client.get(`public`);
+    const parsedCachedPublicOcurrency = JSON.parse(cachedPublicOcurrency as string);
+    const index = parsedCachedPublicOcurrency.findIndex((o: any) => o._id === id);
+    parsedCachedPublicOcurrency.splice(index, 1);
+    await client.set(`public`, JSON.stringify(parsedCachedPublicOcurrency));
+  }
+  const cachedPrivateOcurrencyParsed = JSON.parse(cachedPrivateOcurrency as string);
+  const index = cachedPrivateOcurrencyParsed.findIndex((o: any) => o._id === id);
+  cachedPrivateOcurrencyParsed.splice(index, 1);
+  await client.set(`user:${ocurrency.userId}`, JSON.stringify(cachedPrivateOcurrencyParsed));
   return;
 };
 
