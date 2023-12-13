@@ -8,6 +8,7 @@ const User_1 = require("../models/User");
 const api_errors_1 = require("../helpers/api-errors");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = require("bcrypt");
+const redis_1 = __importDefault(require("../database/redis"));
 const hashPassword = async (password) => {
     return await (0, bcrypt_1.hash)(password, 10);
 };
@@ -67,6 +68,10 @@ const updateUser = async (email, userData) => {
     if (!updatedUser) {
         throw new api_errors_1.InternalServerError('Error updating user');
     }
+    if (userData.email || userData.password) {
+        await redis_1.default.set(String(userData === null || userData === void 0 ? void 0 : userData.email) || email, JSON.stringify({ email: userData.email || email, password: userData.password || user.password }));
+    }
+    ;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = updatedUser.toObject();
     return userWithoutPassword;
@@ -74,6 +79,7 @@ const updateUser = async (email, userData) => {
 exports.updateUser = updateUser;
 const deleteUser = async (email) => {
     await User_1.User.findOneAndDelete({ email });
+    await redis_1.default.del(email);
     return;
 };
 exports.deleteUser = deleteUser;

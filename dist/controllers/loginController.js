@@ -8,21 +8,31 @@ const User_1 = require("../models/User");
 const api_errors_1 = require("../helpers/api-errors");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userServices_1 = require("../services/userServices");
+const redis_1 = __importDefault(require("../database/redis"));
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await User_1.User.findOne({
-        email: email
-    });
-    if (!user) {
-        throw new api_errors_1.NotFoundError('Usuário não encontrado');
+    let user;
+    let cache = await redis_1.default.get(email);
+    if (cache) {
+        user = JSON.parse(cache);
+    }
+    else {
+        user = await User_1.User.findOne({
+            email
+        });
+        if (!user) {
+            throw new api_errors_1.NotFoundError('User not Found');
+        }
+        await redis_1.default.set(email, JSON.stringify(user.toObject()));
     }
     const verifyPassword = await bcrypt_1.default.compare(password, user.password);
     if (!verifyPassword) {
         throw new api_errors_1.UnauthorizedError('Usuário ou senha incorretos');
     }
     const token = (0, userServices_1.generateToken)({ email });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = user.toObject();
+    const { password: _, ...userWithoutPassword } = cache
+        ? user
+        : user.toObject();
     return res.send({
         userWithoutPassword,
         token
