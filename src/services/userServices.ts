@@ -3,6 +3,7 @@ import { ICreateUser, IUser } from '../dtos/UserDTO';
 import { BadRequestError, InternalServerError } from '../helpers/api-errors';
 import jwt from 'jsonwebtoken';
 import { hash } from 'bcrypt';
+import client from '../database/redis';
 
 type TokenType = { email: string };
 
@@ -67,10 +68,18 @@ const updateUser = async (email: string, userData: Partial<IUser>) => {
   if (!updatedUser) {
     throw new InternalServerError('Error updating user');
   }
+  if(userData.email || userData.password) {
+    await client.set(String(userData?.email) || email, JSON.stringify({email: userData.email||email,password:userData.password||user.password}))
+  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...userWithoutPassword } = updatedUser.toObject();
+
+  return userWithoutPassword;
 };
 
 const deleteUser = async (email: string) => {
   await User.findOneAndDelete({ email });
+  await client.del(email);
   return;
 };
 

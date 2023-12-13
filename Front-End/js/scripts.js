@@ -103,18 +103,17 @@ const GetUserOcurrencies = async () => {
 
 const deleteOcurrency = async (id) => {
   const options = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
       Authorization: `Bearer ${readCookie()}`
     }
   };
-  await fetch(`http://localhost:3000/ocurrency/${id}`, options)
-}
+  await fetch(`http://localhost:3000/ocurrency/${id}`, options);
+};
 
 const updateOcurrency = async (id, ocurrencyData) => {
-  console.log();
   const options = {
-    method: "PUT",
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${readCookie()}`
@@ -124,10 +123,21 @@ const updateOcurrency = async (id, ocurrencyData) => {
   await fetch(`http://localhost:3000/ocurrency/${id}`, options)
     .then((response) => response.json())
     .then(() => {
-      alert("Atualizado com Sucesso")
+      iziToast.success({
+        title: 'Sucesso',
+        message: 'Ocorrência atualizada com sucesso!',
+        position: 'bottomCenter'
+      });
     })
-    .catch((err) => console.log(err));
-}
+    .catch((err) => {
+      iziToast.error({
+        title: 'Erro',
+        message: 'Ocorrência não atualizada!',
+        position: 'bottomCenter'
+      });
+      console.log(err);
+    });
+};
 
 const formatDate = (date) => {
   const dateSplit = date.split('-');

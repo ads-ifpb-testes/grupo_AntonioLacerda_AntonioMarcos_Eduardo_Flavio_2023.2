@@ -1,34 +1,53 @@
+import client from '../database/redis';
 import { ICreateOcurrency, IOcurrency } from '../dtos/OcurrencyDTO';
 import { BadRequestError, NotFoundError } from '../helpers/api-errors';
 import { Ocurrency } from '../models/Ocurrency';
 import { User } from '../models/User';
 
-const GetPublicOccurrecies = async () => {
+const getPublicOccurrecies = async () => {
+  const key = `public`;
+  const cachedOcurrencyExists = await client.exists(key)
+  if (cachedOcurrencyExists) {
+    const cachedOcurrency = await client.lRange(key, 0, -1);
+    cachedOcurrency.map((ocurrency) => {
+      return JSON.parse(ocurrency);
+    });
+  }
   const ocurrency = await Ocurrency.find({
     public: true
   });
+  await client.rPush(key, JSON.stringify(ocurrency));
   return ocurrency.map((ocurrency) => {
     return ocurrency.toObject();
   });
 };
 
-const GetUserOccurrecies = async (userId: string) => {
+const getUserOccurrecies = async (userId: string) => {
   if (!userId) {
     throw new BadRequestError('User id is required');
+  }
+  const key = `user:${userId}`;
+  const cachedOcurrencyExists = await client.exists(key)
+  if (cachedOcurrencyExists) {
+    const cachedOcurrency = await client.lRange(key, 0, -1);
+    cachedOcurrency.map((ocurrency) => {
+      return JSON.parse(ocurrency);
+    });
   }
   const user = await User.findById(userId);
   if (!user) {
     throw new NotFoundError('User not found');
   }
-  const ocurrency = await Ocurrency.find({
+  const ocurrencies = await Ocurrency.find({
     userId: userId
   });
-  return ocurrency.map((ocurrency) => {
+  await client.rPush(key, JSON.stringify(ocurrencies));
+  return ocurrencies.map((ocurrency) => {
     return ocurrency.toObject();
   });
 };
 
-const CreateOcurrency = async (ocurrencyData: ICreateOcurrency) => {
+const createOcurrency = async (ocurrencyData: IOcurrency) => {
   const newOcurrency = await Ocurrency.create({
     userId: ocurrencyData.userId,
     title: ocurrencyData.title,
@@ -44,16 +63,21 @@ const CreateOcurrency = async (ocurrencyData: ICreateOcurrency) => {
     },
     public: ocurrencyData.public
   });
+  if (!newOcurrency) {
+    throw new BadRequestError('Ocurrency not created');
+  }
+  if (ocurrencyData.public) {
+    await client.rPush('public', JSON.stringify(newOcurrency.toObject()));
+  }
+  await client.rPush(`user:${ocurrencyData.userId}`, JSON.stringify(newOcurrency.toObject()));
   return newOcurrency.toObject();
 };
 
-const UpdateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
+const updateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
   if (!id) {
     throw new BadRequestError('Ocurrency id is required');
   }
   const ocurrency = await Ocurrency.findById(id);
-  console.log(ocurrency);
-
   if (!ocurrency) {
     throw new NotFoundError('Ocurrency not found');
   }
@@ -65,10 +89,27 @@ const UpdateOcurrency = async (id: string, newData: Partial<IOcurrency>) => {
   if (!updatedOcurrency) {
     throw new BadRequestError('Ocurrency not updated');
   }
+  if (updatedOcurrency.public && ocurrency.public) {
+    await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
+    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+    await client.rPush('public', JSON.stringify(updatedOcurrency.toObject()));
+    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+  } else if (updatedOcurrency.public && !ocurrency.public) {
+    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+    await client.rPush('public', JSON.stringify(updatedOcurrency.toObject()));
+  } else if (!updatedOcurrency.public && ocurrency.public) {
+    await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
+    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+  } else {
+    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+  }
   return updatedOcurrency.toObject();
 };
 
-const DeleteOcurrency = async (id: string) => {
+const deleteOcurrency = async (id: string) => {
   if (!id) {
     throw new BadRequestError('Ocurrency id is required');
   }
@@ -80,13 +121,17 @@ const DeleteOcurrency = async (id: string) => {
   if (!deletedOcurrency) {
     throw new BadRequestError('Ocurrency not deleted');
   }
+  if (ocurrency.public) {
+    await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
+  }
+  await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
   return;
 };
 
 export {
-  GetPublicOccurrecies,
-  GetUserOccurrecies,
-  CreateOcurrency,
-  DeleteOcurrency,
-  UpdateOcurrency
+  getPublicOccurrecies,
+  getUserOccurrecies,
+  createOcurrency,
+  deleteOcurrency,
+  updateOcurrency
 };

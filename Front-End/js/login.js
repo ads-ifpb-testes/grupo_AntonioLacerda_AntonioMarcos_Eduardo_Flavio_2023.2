@@ -49,12 +49,17 @@ const login = async (email, password) => {
   await fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       if (data.token) {
+        iziToast.success({
+          title: 'Login realizado com sucesso'
+        });
         createCookie(data.token);
         window.location.href = './html/home.html';
       } else {
-        alert(data.message);
+        iziToast.error({
+          title: 'Erro ao fazer login',
+          message: data.message
+        });
       }
     });
 };
@@ -82,16 +87,31 @@ const register = async (nome, email, password, telefone) => {
   await fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       if (data.token) {
         createCookie(data.token);
-        window.location.href = './home.html';
+        iziToast.success({
+          title: 'Sucesso',
+          message: 'Usuário cadastrado com sucesso!',
+          position: 'bottomRight'
+        });
+        setTimeout(() => {
+          window.location.href = './home.html';
+        }, 2500);
       } else {
-        alert('Erro ao cadastrar usuário');
+        iziToast.error({
+          title: 'Erro',
+          message: 'Não foi possível cadastrar o usuário!',
+          position: 'bottomRight'
+        });
       }
     })
     .catch((error) => {
       console.log(error);
+      iziToast.error({
+        title: 'Erro',
+        message: 'Não foi possível cadastrar o usuário!',
+        position: 'bottomRight'
+      });
     });
 };
 

@@ -2,19 +2,43 @@
 import { login, register } from './login.js';
 import { isTokenValid } from './scripts.js';
 
+const loadSpinner = document.createElement('div');
+loadSpinner.className = 'lds-ring';
+loadSpinner.innerHTML = `
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+`;
+
 window.onload = async () => {
   if (await isTokenValid()) {
     window.location.href = './html/home.html';
   }
 };
-
+let isLoading = false;
 const loginButton = document.getElementById('signin');
 
 loginButton?.addEventListener('click', async (e) => {
   e.preventDefault();
+  isLoading = true;
   const email = document.getElementById('email').value;
   const password = document.getElementById('senha').value;
-  await login(email, password);
+  loginButton.disabled = isLoading;
+  loginButton.replaceChildren(loadSpinner);
+  await login(email, password)
+    .then(() => {
+      isLoading = false;
+      loginButton.replaceChildren('Entrar');
+    })
+    .catch(() => {
+      isLoading = false;
+      loginButton.replaceChildren('Entrar');
+    })
+    .finally(() => {
+      isLoading = false;
+      loginButton.disabled = isLoading;
+    });
 });
 
 const registerButton = document.getElementById('signup');
