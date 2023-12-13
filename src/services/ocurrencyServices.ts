@@ -6,7 +6,7 @@ import { User } from '../models/User';
 
 const getPublicOccurrecies = async () => {
   const key = `public`;
-  const cachedOcurrencyExists = await client.exists(key)
+  const cachedOcurrencyExists = await client.exists(key);
   if (cachedOcurrencyExists) {
     const cachedOcurrency = await client.lRange(key, 0, -1);
     cachedOcurrency.map((ocurrency) => {
@@ -27,7 +27,7 @@ const getUserOccurrecies = async (userId: string) => {
     throw new BadRequestError('User id is required');
   }
   const key = `user:${userId}`;
-  const cachedOcurrencyExists = await client.exists(key)
+  const cachedOcurrencyExists = await client.exists(key);
   if (cachedOcurrencyExists) {
     const cachedOcurrency = await client.lRange(key, 0, -1);
     cachedOcurrency.map((ocurrency) => {
@@ -69,11 +69,17 @@ const createOcurrency = async (ocurrencyData: ICreateOcurrency) => {
   if (ocurrencyData.public) {
     await client.rPush('public', JSON.stringify(newOcurrency.toObject()));
   }
-  await client.rPush(`user:${ocurrencyData.userId}`, JSON.stringify(newOcurrency.toObject()));
+  await client.rPush(
+    `user:${ocurrencyData.userId}`,
+    JSON.stringify(newOcurrency.toObject())
+  );
   return newOcurrency.toObject();
 };
 
-const updateOcurrency = async (id: string, newData: Partial<ICreateOcurrency>) => {
+const updateOcurrency = async (
+  id: string,
+  newData: Partial<ICreateOcurrency>
+) => {
   if (!id) {
     throw new BadRequestError('Ocurrency id is required');
   }
@@ -90,20 +96,48 @@ const updateOcurrency = async (id: string, newData: Partial<ICreateOcurrency>) =
   }
   if (updatedOcurrency.public && ocurrency.public) {
     await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
-    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+    await client.lRem(
+      `user:${ocurrency.userId}`,
+      0,
+      JSON.stringify(ocurrency.toObject())
+    );
     await client.rPush('public', JSON.stringify(updatedOcurrency.toObject()));
-    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+    await client.rPush(
+      `user:${ocurrency.userId}`,
+      JSON.stringify(updatedOcurrency.toObject())
+    );
   } else if (updatedOcurrency.public && !ocurrency.public) {
-    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
-    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+    await client.lRem(
+      `user:${ocurrency.userId}`,
+      0,
+      JSON.stringify(ocurrency.toObject())
+    );
+    await client.rPush(
+      `user:${ocurrency.userId}`,
+      JSON.stringify(updatedOcurrency.toObject())
+    );
     await client.rPush('public', JSON.stringify(updatedOcurrency.toObject()));
   } else if (!updatedOcurrency.public && ocurrency.public) {
     await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
-    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
-    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+    await client.lRem(
+      `user:${ocurrency.userId}`,
+      0,
+      JSON.stringify(ocurrency.toObject())
+    );
+    await client.rPush(
+      `user:${ocurrency.userId}`,
+      JSON.stringify(updatedOcurrency.toObject())
+    );
   } else {
-    await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
-    await client.rPush(`user:${ocurrency.userId}`, JSON.stringify(updatedOcurrency.toObject()));
+    await client.lRem(
+      `user:${ocurrency.userId}`,
+      0,
+      JSON.stringify(ocurrency.toObject())
+    );
+    await client.rPush(
+      `user:${ocurrency.userId}`,
+      JSON.stringify(updatedOcurrency.toObject())
+    );
   }
   return updatedOcurrency.toObject();
 };
@@ -123,7 +157,11 @@ const deleteOcurrency = async (id: string) => {
   if (ocurrency.public) {
     await client.lRem('public', 0, JSON.stringify(ocurrency.toObject()));
   }
-  await client.lRem(`user:${ocurrency.userId}`, 0, JSON.stringify(ocurrency.toObject()));
+  await client.lRem(
+    `user:${ocurrency.userId}`,
+    0,
+    JSON.stringify(ocurrency.toObject())
+  );
   return;
 };
 

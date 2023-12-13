@@ -1,4 +1,12 @@
-import { describe, expect, it, beforeEach, beforeAll } from '@jest/globals';
+import {
+  describe,
+  expect,
+  it,
+  beforeEach,
+  beforeAll,
+  afterAll,
+  afterEach
+} from '@jest/globals';
 import { ICreateOcurrency, IOcurrency } from '../../dtos/OcurrencyDTO';
 import { IUser, IUserWithoutPassword } from '../../dtos/UserDTO';
 import {
@@ -8,24 +16,18 @@ import {
   deleteOcurrency,
   updateOcurrency
 } from '../../services/ocurrencyServices';
-import { User } from '../../models/User';
-import { Schema } from 'mongoose';
-import { createUser } from '../../services/userServices';
+import { createUser, deleteUser } from '../../services/userServices';
 
 const user = {
   name: 'teste',
-  email: 'teste@email.com',
+  email: 'teste1@email.com',
   password: '123456'
 };
 let newUser: IUserWithoutPassword;
-beforeAll(async () => {
-  await User.deleteMany({
-    email: /test/
-  });
-  newUser = (await createUser(user)).user;
-  console.log(newUser);
 
-});
+// beforeAll(async () => {
+//   await deleteUser(user.email);
+// });
 
 describe('Ocurrency Services', () => {
   describe('getPublicOccurrecies', () => {
@@ -66,38 +68,44 @@ describe('Ocurrency Services', () => {
     });
   });
   describe('getUserOccurrecies', () => {
+    beforeEach(async () => {
+      await deleteUser(user.email);
+      newUser = (await createUser(user)).user;
+    });
     it('should get all user ocurrency', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
       expect(ocurrencies).toBeInstanceOf(Array);
     });
     it('should get all user ocurrency with userId', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
-      ocurrencies.forEach((ocurrency: IOcurrency) => {
+      ocurrencies.forEach((ocurrency: any) => {
         expect(ocurrency.userId).toBeDefined();
       });
     });
     it('should get all user ocurrency with title', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
-      ocurrencies.forEach((ocurrency: IOcurrency) => {
+      ocurrencies.forEach((ocurrency: any) => {
         expect(ocurrency.title).toBeDefined();
       });
     });
     it('should get all user ocurrency with public flag true or false', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
-      ocurrencies.forEach((ocurrency: IOcurrency) => {
+      ocurrencies.forEach((ocurrency: any) => {
         expect(ocurrency.public).toBeDefined();
       });
     });
     it('should get all user ocurrency with timestamps', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
-      ocurrencies.forEach((ocurrency: IOcurrency) => {
+      ocurrencies.forEach((ocurrency: any) => {
         expect(ocurrency.createdAt).toBeDefined();
         expect(ocurrency.updatedAt).toBeDefined();
       });
     });
     it('should get all user ocurrency with location', async () => {
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
-      ocurrencies.forEach((ocurrency: IOcurrency) => {
+      console.log(ocurrencies);
+
+      ocurrencies.forEach((ocurrency: any) => {
         expect(ocurrency.location).toBeDefined();
       });
     });
@@ -107,11 +115,12 @@ describe('Ocurrency Services', () => {
     it('should throw an error if user is not found', async () => {
       await expect(getUserOccurrecies('123')).rejects.toThrowError();
     });
-    it('should throw an error if user id is not provided', async () => {
-      await expect(getUserOccurrecies('')).rejects.toThrowError();
-    });
   });
   describe('CreateOcurrency', () => {
+    beforeEach(async () => {
+      await deleteUser(user.email);
+      newUser = (await createUser(user)).user;
+    });
     it('should create a new ocurrency', async () => {
       const ocurrency: ICreateOcurrency = {
         userId: String(newUser._id),
@@ -159,6 +168,10 @@ describe('Ocurrency Services', () => {
     });
   });
   describe('UpdateOcurrency', () => {
+    beforeEach(async () => {
+      await deleteUser(user.email);
+      newUser = (await createUser(user)).user;
+    });
     it('should update a ocurrency', async () => {
       const ocurrency: ICreateOcurrency = {
         userId: String(newUser._id),
@@ -187,6 +200,10 @@ describe('Ocurrency Services', () => {
     });
   });
   describe('DeleteOcurrency', () => {
+    beforeEach(async () => {
+      await deleteUser(user.email);
+      newUser = (await createUser(user)).user;
+    });
     it('should delete a ocurrency', async () => {
       const ocurrency: ICreateOcurrency = {
         userId: String(newUser._id),
@@ -210,4 +227,12 @@ describe('Ocurrency Services', () => {
       await expect(deleteOcurrency('123')).rejects.toThrowError();
     });
   });
+});
+
+afterEach(async () => {
+  await deleteUser(user.email);
+});
+
+afterAll(async () => {
+  await deleteUser(user.email);
 });

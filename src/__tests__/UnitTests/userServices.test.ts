@@ -14,11 +14,10 @@ const user: ICreateUser = {
   email: 'teste@email.com',
   password: '123456'
 };
+
 beforeEach(async () => {
   await deleteUser(user.email);
-  console.log('afterEach');
 });
-
 describe('User Services', () => {
   describe('createUser', () => {
     it('should create a user', async () => {
@@ -56,7 +55,7 @@ describe('User Services', () => {
       const updatedUser: Partial<ICreateUser> = {
         name: 'teste2'
       };
-      expect(await updateUser(user.email, updatedUser)).toHaveProperty("_id");
+      expect(await updateUser(user.email, updatedUser)).toHaveProperty('_id');
     });
     it('should not update a user that not exists', async () => {
       const user: ICreateUser = {
