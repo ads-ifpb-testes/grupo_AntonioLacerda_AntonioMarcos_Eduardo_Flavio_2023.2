@@ -6,8 +6,9 @@ import { User } from '../models/User';
 
 const getPublicOccurrecies = async () => {
   const key = `public`;
-  const cachedOcurrency = await client.lRange(key, 0, -1)
-  if (cachedOcurrency) {
+  const cachedOcurrencyExists = await client.exists(key)
+  if (cachedOcurrencyExists) {
+    const cachedOcurrency = await client.lRange(key, 0, -1);
     cachedOcurrency.map((ocurrency) => {
       return JSON.parse(ocurrency);
     });
@@ -26,8 +27,9 @@ const getUserOccurrecies = async (userId: string) => {
     throw new BadRequestError('User id is required');
   }
   const key = `user:${userId}`;
-  const cachedOcurrency = await client.lRange(key, 0, -1)
-  if (cachedOcurrency) {
+  const cachedOcurrencyExists = await client.exists(key)
+  if (cachedOcurrencyExists) {
+    const cachedOcurrency = await client.lRange(key, 0, -1);
     cachedOcurrency.map((ocurrency) => {
       return JSON.parse(ocurrency);
     });
