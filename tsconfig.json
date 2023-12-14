@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["node", "jest"],
     "target": "ES2018",
     "module": "CommonJS",
     "allowJs": true,
@@ -18,7 +17,7 @@
     "typeRoots": ["./src/@types"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "cypress.config.json", "cypress"],
   "ts-node": {
     "files": true
   }
