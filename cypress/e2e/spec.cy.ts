@@ -5,7 +5,7 @@ describe('Index page', async () => {
     it('should login with a user then exists', () => {
       cy.visit('https://crimealert.surge.sh/');
 
-      cy.get('#email').type('teste1@email.com');
+      cy.get('#email').type('teste@email.com');
       cy.get('#senha').type('123456');
 
       cy.get('#signin').click();
@@ -47,7 +47,7 @@ describe('Index page', async () => {
       cy.get('p a').click();
 
       cy.get('#nome').type('teste2');
-      cy.get('#email').type('test2@email.com');
+      cy.get('#email').type('test1@email.com');
       cy.get('#senha').type('123456');
       cy.get('#telefone').type('123456789');
 
@@ -61,14 +61,16 @@ describe('Index page', async () => {
   });
 });
 
-describe.only('Map page', () => {
+describe('Map page', () => {
   it('Create Ocurrency', () => {
     cy.visit('https://crimealert.surge.sh/');
 
-    cy.get('#email').type('teste1@email.com');
+    cy.get('#email').type('teste2@email.com');
     cy.get('#senha').type('123456');
 
     cy.get('#signin').click();
+
+    cy.wait(5000);
 
     cy.get('#titulo').type('Teste');
     cy.get('#data').type('2023-12-13');
@@ -89,7 +91,7 @@ describe.only('Map page', () => {
   it('Delete Ocurrency', () => {
     cy.visit('https://crimealert.surge.sh/');
 
-    cy.get('#email').type('teste1@email.com');
+    cy.get('#email').type('teste2@email.com');
     cy.get('#senha').type('123456');
 
     cy.get('#signin').click();
