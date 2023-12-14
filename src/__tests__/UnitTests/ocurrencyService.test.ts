@@ -25,9 +25,13 @@ const user = {
 };
 let newUser: IUserWithoutPassword;
 
-// beforeAll(async () => {
-//   await deleteUser(user.email);
-// });
+beforeAll(async () => {
+  await deleteUser(user.email);
+});
+
+beforeEach(async () => {
+  await deleteUser(user.email);
+});
 
 describe('Ocurrency Services', () => {
   describe('getPublicOccurrecies', () => {
@@ -69,10 +73,11 @@ describe('Ocurrency Services', () => {
   });
   describe('getUserOccurrecies', () => {
     beforeEach(async () => {
-      await deleteUser(user.email);
       newUser = (await createUser(user)).user;
     });
     it('should get all user ocurrency', async () => {
+      console.log(newUser._id);
+
       const ocurrencies = await getUserOccurrecies(String(newUser._id));
       expect(ocurrencies).toBeInstanceOf(Array);
     });
