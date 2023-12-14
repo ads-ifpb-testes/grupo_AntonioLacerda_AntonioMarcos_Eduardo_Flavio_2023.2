@@ -7,7 +7,7 @@ import {
   InternalServerError,
   UnauthorizedError,
   ForbiddenError
-} from '../../helpers/api-errors'; // Substitua pelo caminho correto
+} from '../../helpers/api-errors';
 
 describe('ApiError Classes', () => {
   describe('ApiError', () => {

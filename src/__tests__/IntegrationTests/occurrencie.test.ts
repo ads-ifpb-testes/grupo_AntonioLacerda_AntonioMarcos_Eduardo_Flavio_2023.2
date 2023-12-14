@@ -6,7 +6,7 @@ import { createUser, deleteUser } from '../../services/userServices';
 
 const user = {
     name: 'teste',
-    email: 'teste6@email.com',
+    email: 'teste18@email.com',
     password: '123456'
 };
 

@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { describe, expect, it, beforeEach, afterAll } from '@jest/globals';
 import {
   createUser,
   deleteUser,
@@ -34,7 +34,6 @@ describe('User Services', () => {
         email: 'teste@email.com',
         password: '123456'
       };
-      await createUser(user);
       try {
         await createUser(user);
       } catch (error) {
