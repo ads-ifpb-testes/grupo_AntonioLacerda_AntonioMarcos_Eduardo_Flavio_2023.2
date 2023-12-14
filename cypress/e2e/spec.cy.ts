@@ -60,3 +60,47 @@ describe('Index page', async () => {
     });
   });
 });
+
+describe.only('Map page', () => {
+  it('Create Ocurrency', () => {
+    cy.visit('https://crimealert.surge.sh/');
+
+    cy.get('#email').type('teste1@email.com');
+    cy.get('#senha').type('123456');
+
+    cy.get('#signin').click();
+
+    cy.get('#titulo').type('Teste');
+    cy.get('#data').type('2023-12-13');
+    cy.get('#hora').type('00:00');
+    cy.get('#tipo').select('Outro');
+    cy.get('#status').select('publica');
+    cy.get('#map').click('center');
+
+    cy.get('#adicionar__ocorrencia').click();
+
+    cy.wait(2000);
+
+    cy.get('.iziToast-body').should(
+      'have.text',
+      'Ocorrência cadastrada com sucesso!'
+    );
+  });
+  it('Delete Ocurrency', () => {
+    cy.visit('https://crimealert.surge.sh/');
+
+    cy.get('#email').type('teste1@email.com');
+    cy.get('#senha').type('123456');
+
+    cy.get('#signin').click();
+
+    cy.get('ul > :nth-child(1) > a').click();
+
+    cy.wait(15000);
+
+    const list = cy.get('ul');
+    cy.get('ul > :nth-child(1) .button-delete').click();
+
+    list.should('have.length', 0);
+  });
+});
