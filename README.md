@@ -1,12 +1,13 @@
 # Crime Alert
+
 O Crime Alert é um sistema web onde você pode cadastrar ocorrências policiais e ver outras que usuários postam.
 
-
 ## Equipe
+
 - Flávio Henrique Marques de Sousa
 - Antonio Marcos Batista Rodrigues
-- Antonio Lacerda Rolim Neto
-- Eduardo Denis Paiva WhiteHurst
+- Antônio Lacerda Rolim Neto
+- Eduardo Denis Paiva Whitehurst
 
 # Licença
 
